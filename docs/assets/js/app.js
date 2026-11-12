@@ -2,7 +2,7 @@ import { loadModel, getConfig, fileToImage, cropSquare, checkQuality, classify }
 import { recommend, RULE_TEXT, AAD_2024, JEADV_2024 } from "./rules.js";
 import { addEntry, allEntries, deleteEntry, clearAll, toCSV } from "./journal.js";
 
-const VERSION = "2.1.1";
+const VERSION = "2.1.2";
 const MODEL_DATE = "2026-11-12";
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
