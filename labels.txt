@@ -1,3 +1,0 @@
-0 Non-Inflammatory
-1 Inflammatory
-2 Clear Skin

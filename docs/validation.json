@@ -1,0 +1,15 @@
+{
+  "_how_to_edit": "After the dermatologist consult: set status to \"validated\" and fill in the numbers from the scoring spreadsheet (sheet 'Results', yellow cells). Keep the quotes around text, no quotes around numbers. See guides/03-update-the-validation-badge.md",
+  "status": "pending",
+  "doctor_match_rate": null,
+  "verified_agreement_score": null,
+  "images_reviewed": null,
+  "reviewer": "",
+  "date": "",
+  "technical_test": {
+    "images": 75,
+    "accuracy": 93.3,
+    "inflammatory_caught": "23 of 25",
+    "kappa": 0.9
+  }
+}

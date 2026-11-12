@@ -1,0 +1,46 @@
+// End-to-end walk-through on an emulated phone.
+// Usage: serve docs/ on a port, then: node tests/e2e.cjs http://127.0.0.1:8765/ path/to/skin-photo.jpg OUT_DIR
+const { chromium, devices } = require("playwright");
+(async () => {
+  const [, , url, photo, out] = process.argv;
+  const browser = await chromium.launch();
+  const ctx = await browser.newContext({ ...devices["Pixel 7"] });
+  const page = await ctx.newPage();
+  const errors = [];
+  page.on("console", (m) => { if (m.type() === "error") errors.push(m.text()); });
+  page.on("pageerror", (e) => errors.push(String(e)));
+  const shot = (n) => page.screenshot({ path: `${out}/${n}.png` });
+  await page.goto(url);
+  await page.waitForTimeout(700); await shot("01-splash");
+  await page.waitForSelector("#splash", { state: "detached", timeout: 10000 });
+  await shot("02-onboarding");
+  await page.click("#ob-continue");
+  await page.waitForFunction(() => document.querySelector("#model-status").textContent.includes("AI ready"), null, { timeout: 120000 });
+  await shot("03-home");
+  await page.setInputFiles("#file-gallery", photo);
+  await page.waitForSelector("#s-frame.active");
+  await page.waitForTimeout(900); await shot("04-frame");
+  await page.click("#btn-analyze");
+  await page.waitForSelector("#s-analyzing.active"); await page.waitForTimeout(900); await shot("05-analyzing");
+  await page.waitForSelector("#s-quiz.active", { timeout: 30000 });
+  await page.waitForTimeout(500); await shot("06-quiz-lesion");
+  await page.click('.opt[data-v="Papules"]'); await page.click("#q-next");
+  await page.waitForTimeout(450); await shot("07-quiz-skin");
+  await page.click('.opt[data-v="Oily"]'); await page.waitForTimeout(700);
+  await page.click('.opt[data-v="Resilient"]'); await page.waitForTimeout(700);
+  await page.click('.opt[data-v="No"]'); await page.waitForTimeout(300); await shot("08-quiz-last");
+  await page.click("#q-next");
+  await page.waitForSelector("#s-results.active"); await page.waitForTimeout(1800);
+  await page.screenshot({ path: `${out}/09-results-full.png`, fullPage: true });
+  const result = await page.evaluate(() => document.querySelector(".result-hero .label")?.textContent);
+  await page.click("#res-save"); await page.waitForTimeout(500);
+  await page.click('#sv-routine button[data-v="First check"]'); await page.click('#sv-irr button[data-v="1"]');
+  await shot("10-save-sheet"); await page.click("#sv-save"); await page.waitForTimeout(700);
+  await page.click('.tab[data-tab="journal"]'); await page.waitForTimeout(900); await shot("11-journal");
+  const [dl] = await Promise.all([page.waitForEvent("download", { timeout: 5000 }).catch(() => null), page.click("#btn-export")]);
+  const csv = dl ? require("fs").readFileSync(await dl.path(), "utf8") : "(share sheet used)";
+  await page.click('.tab[data-tab="settings"]'); await page.waitForTimeout(600); await shot("12-settings");
+  await page.click('#s-settings [data-sheet="validation"]'); await page.waitForTimeout(700); await shot("13-validation-sheet");
+  console.log(JSON.stringify({ result, errors, csv }, null, 1));
+  await browser.close();
+})();

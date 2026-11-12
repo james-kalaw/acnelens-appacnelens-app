@@ -1,0 +1,19 @@
+{
+ "labels": [
+  "Clear Skin",
+  "Non-Inflammatory",
+  "Inflammatory"
+ ],
+ "input_size": 224,
+ "input": "RGB 0-255, NHWC float32",
+ "input_name": "image",
+ "t_inf": 0.3333,
+ "gate": 0.5,
+ "model_file": "acnelens.onnx",
+ "quality": {
+  "min_brightness": 45.0,
+  "max_brightness": 235.0,
+  "min_sharpness": 0.6,
+  "min_skin": 0.3
+ }
+}

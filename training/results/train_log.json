@@ -1,0 +1,300 @@
+{
+ "labels": [
+  "Clear Skin",
+  "Non-Inflammatory",
+  "Inflammatory"
+ ],
+ "best_val_balanced_acc": 0.9920634920634921,
+ "history": [
+  {
+   "epoch": 1,
+   "val_balanced_acc": 0.742,
+   "recall": {
+    "Clear Skin": 0.84,
+    "Non-Inflammatory": 0.553,
+    "Inflammatory": 0.833
+   },
+   "loss": 0.9879
+  },
+  {
+   "epoch": 2,
+   "val_balanced_acc": 0.7982,
+   "recall": {
+    "Clear Skin": 0.8,
+    "Non-Inflammatory": 0.868,
+    "Inflammatory": 0.726
+   },
+   "loss": 0.7746
+  },
+  {
+   "epoch": 3,
+   "val_balanced_acc": 0.8552,
+   "recall": {
+    "Clear Skin": 0.88,
+    "Non-Inflammatory": 0.947,
+    "Inflammatory": 0.738
+   },
+   "loss": 0.6941
+  },
+  {
+   "epoch": 4,
+   "val_balanced_acc": 0.879,
+   "recall": {
+    "Clear Skin": 0.88,
+    "Non-Inflammatory": 0.947,
+    "Inflammatory": 0.81
+   },
+   "loss": 0.6612
+  },
+  {
+   "epoch": 5,
+   "val_balanced_acc": 0.879,
+   "recall": {
+    "Clear Skin": 0.88,
+    "Non-Inflammatory": 0.947,
+    "Inflammatory": 0.81
+   },
+   "loss": 0.6406
+  },
+  {
+   "epoch": 6,
+   "val_balanced_acc": 0.8923,
+   "recall": {
+    "Clear Skin": 0.92,
+    "Non-Inflammatory": 0.947,
+    "Inflammatory": 0.81
+   },
+   "loss": 0.6448
+  },
+  {
+   "epoch": 7,
+   "val_balanced_acc": 0.8719,
+   "recall": {
+    "Clear Skin": 0.88,
+    "Non-Inflammatory": 0.974,
+    "Inflammatory": 0.762
+   },
+   "loss": 0.5986
+  },
+  {
+   "epoch": 8,
+   "val_balanced_acc": 0.8568,
+   "recall": {
+    "Clear Skin": 0.88,
+    "Non-Inflammatory": 1.0,
+    "Inflammatory": 0.69
+   },
+   "loss": 0.5983
+  },
+  {
+   "epoch": 9,
+   "val_balanced_acc": 0.9535,
+   "recall": {
+    "Clear Skin": 0.92,
+    "Non-Inflammatory": 1.0,
+    "Inflammatory": 0.94
+   },
+   "loss": 0.6299
+  },
+  {
+   "epoch": 10,
+   "val_balanced_acc": 0.9708,
+   "recall": {
+    "Clear Skin": 0.96,
+    "Non-Inflammatory": 1.0,
+    "Inflammatory": 0.952
+   },
+   "loss": 0.5021
+  },
+  {
+   "epoch": 11,
+   "val_balanced_acc": 0.9748,
+   "recall": {
+    "Clear Skin": 0.96,
+    "Non-Inflammatory": 1.0,
+    "Inflammatory": 0.964
+   },
+   "loss": 0.4898
+  },
+  {
+   "epoch": 12,
+   "val_balanced_acc": 0.9487,
+   "recall": {
+    "Clear Skin": 0.92,
+    "Non-Inflammatory": 0.974,
+    "Inflammatory": 0.952
+   },
+   "loss": 0.4568
+  },
+  {
+   "epoch": 13,
+   "val_balanced_acc": 0.9708,
+   "recall": {
+    "Clear Skin": 0.96,
+    "Non-Inflammatory": 1.0,
+    "Inflammatory": 0.952
+   },
+   "loss": 0.4777
+  },
+  {
+   "epoch": 14,
+   "val_balanced_acc": 0.9787,
+   "recall": {
+    "Clear Skin": 0.96,
+    "Non-Inflammatory": 1.0,
+    "Inflammatory": 0.976
+   },
+   "loss": 0.4496
+  },
+  {
+   "epoch": 15,
+   "val_balanced_acc": 0.9827,
+   "recall": {
+    "Clear Skin": 0.96,
+    "Non-Inflammatory": 1.0,
+    "Inflammatory": 0.988
+   },
+   "loss": 0.422
+  },
+  {
+   "epoch": 16,
+   "val_balanced_acc": 0.9921,
+   "recall": {
+    "Clear Skin": 1.0,
+    "Non-Inflammatory": 1.0,
+    "Inflammatory": 0.976
+   },
+   "loss": 0.4129
+  },
+  {
+   "epoch": 17,
+   "val_balanced_acc": 0.9827,
+   "recall": {
+    "Clear Skin": 0.96,
+    "Non-Inflammatory": 1.0,
+    "Inflammatory": 0.988
+   },
+   "loss": 0.4057
+  },
+  {
+   "epoch": 18,
+   "val_balanced_acc": 0.9654,
+   "recall": {
+    "Clear Skin": 0.92,
+    "Non-Inflammatory": 1.0,
+    "Inflammatory": 0.976
+   },
+   "loss": 0.4113
+  },
+  {
+   "epoch": 19,
+   "val_balanced_acc": 0.9614,
+   "recall": {
+    "Clear Skin": 0.92,
+    "Non-Inflammatory": 1.0,
+    "Inflammatory": 0.964
+   },
+   "loss": 0.4226
+  },
+  {
+   "epoch": 20,
+   "val_balanced_acc": 0.9654,
+   "recall": {
+    "Clear Skin": 0.92,
+    "Non-Inflammatory": 1.0,
+    "Inflammatory": 0.976
+   },
+   "loss": 0.4025
+  },
+  {
+   "epoch": 21,
+   "val_balanced_acc": 0.9416,
+   "recall": {
+    "Clear Skin": 0.92,
+    "Non-Inflammatory": 1.0,
+    "Inflammatory": 0.905
+   },
+   "loss": 0.3973
+  },
+  {
+   "epoch": 22,
+   "val_balanced_acc": 0.9575,
+   "recall": {
+    "Clear Skin": 0.92,
+    "Non-Inflammatory": 1.0,
+    "Inflammatory": 0.952
+   },
+   "loss": 0.389
+  },
+  {
+   "epoch": 23,
+   "val_balanced_acc": 0.9495,
+   "recall": {
+    "Clear Skin": 0.92,
+    "Non-Inflammatory": 1.0,
+    "Inflammatory": 0.929
+   },
+   "loss": 0.3934
+  },
+  {
+   "epoch": 24,
+   "val_balanced_acc": 0.9456,
+   "recall": {
+    "Clear Skin": 0.92,
+    "Non-Inflammatory": 1.0,
+    "Inflammatory": 0.917
+   },
+   "loss": 0.3845
+  },
+  {
+   "epoch": 25,
+   "val_balanced_acc": 0.9575,
+   "recall": {
+    "Clear Skin": 0.92,
+    "Non-Inflammatory": 1.0,
+    "Inflammatory": 0.952
+   },
+   "loss": 0.3768
+  },
+  {
+   "epoch": 26,
+   "val_balanced_acc": 0.9654,
+   "recall": {
+    "Clear Skin": 0.92,
+    "Non-Inflammatory": 1.0,
+    "Inflammatory": 0.976
+   },
+   "loss": 0.3859
+  },
+  {
+   "epoch": 27,
+   "val_balanced_acc": 0.9654,
+   "recall": {
+    "Clear Skin": 0.92,
+    "Non-Inflammatory": 1.0,
+    "Inflammatory": 0.976
+   },
+   "loss": 0.3875
+  },
+  {
+   "epoch": 28,
+   "val_balanced_acc": 0.9654,
+   "recall": {
+    "Clear Skin": 0.92,
+    "Non-Inflammatory": 1.0,
+    "Inflammatory": 0.976
+   },
+   "loss": 0.3652
+  }
+ ],
+ "class_weights": {
+  "0": 2.0088495575221237,
+  "1": 1.2752808988764044,
+  "2": 0.5820512820512821
+ },
+ "train_counts": [
+  113,
+  178,
+  390
+ ]
+}

@@ -1,0 +1,254 @@
+id,action,new_label,reason
+0181aacf394a,drop,,pixelated
+02261bfff8c1,drop,,pixelated
+02a93690f568,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+02d96c2ca3c8,drop,,watermark
+0319c5714bdb,drop,,ambiguous_inflammation
+0333807c3f49,drop,,pixelated
+0431849db842,drop,,ambiguous_inflammation
+05a78012fb80,crop_to_skin,,face features visible -> cut skin-only patches
+06d8c7c5a419,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+072ae9b5a943,drop,,pixelated
+0779d6327dc4,drop,,pixelated
+08bc7b81ba42,drop,,pixelated
+090cab419357,drop,,ambiguous_lesion
+0b4d2f6c24dd,drop,,ambiguous_inflammation
+0c42facb5e81,drop,,pixelated
+0e8b77d12598,drop,,unclear
+0fa50dc1b83a,drop,,ambiguous_inflammation
+12d4d2a9111c,drop,,ambiguous_lesion
+14d37beeacdd,drop,,ambiguous_lesion
+17b846ff2f67,drop,,ambiguous_lesion
+1949f05a2a35,drop,,pixelated
+1a859b60951a,drop,,ambiguous_inflammation
+1bcb646d0938,drop,,not_acne
+1c08f715f0ba,drop,,ambiguous_lesion
+1e5d458b67b5,drop,,pixelated
+1e91fe17ea02,drop,,ambiguous_inflammation
+1f7da99cd52c,drop,,watermark
+1fb8c72b80d1,crop_to_skin,,face features visible -> cut skin-only patches
+2087fc00b9ac,drop,,not_face
+20b803ba17e7,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+229a89245dcd,crop_to_skin,,face features visible -> cut skin-only patches
+22cb2f0c7d8c,drop,,pixelated
+22d47fdc73e3,drop,,pixelated
+23667edd563d,crop_to_skin,,face features visible -> cut skin-only patches
+23dfad19e924,drop,,collage
+24452921e814,drop,,ambiguous_inflammation
+26105cf1e94e,drop,,unclear
+2808e804a51e,drop,,ambiguous_inflammation
+282bd7c3540e,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+2a2814a5273c,drop,,not_face
+2a43b548edd5,drop,,ambiguous_inflammation
+2ac63ae25ff8,drop,,pixelated
+2b69c4b98e5f,drop,,text_overlay
+2d2783ee01f2,crop_to_skin,,face features visible -> cut skin-only patches
+2db3dbb31212,drop,,stock_or_illustration
+2e140ff0189e,crop_to_skin,,face features visible -> cut skin-only patches
+2eeeb4d0b7a6,drop,,ambiguous_inflammation
+30121c7b84ca,crop_to_skin,,face features visible -> cut skin-only patches
+31e5d6639bda,drop,,ambiguous_inflammation
+34a28a6015f6,crop_to_skin,,face features visible -> cut skin-only patches
+35fc622c9c59,drop,,stock_or_illustration
+35fd974a39d8,drop,,not_acne
+360877a5f445,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+3810e0fdab7f,drop,,pixelated
+3a503dce0897,drop,,watermark
+3b61e9dbf59e,drop,,ambiguous_inflammation
+3c8e589089bf,drop,,stock_or_illustration
+3ce874eb083d,crop_to_skin,,face features visible -> cut skin-only patches
+3d9fee46d221,drop,,ambiguous_lesion
+3e1719821e25,drop,,ambiguous_inflammation
+3e93924f5643,drop,,pixelated
+4163d70a87fe,drop,,pixelated
+420e4b7c1ec9,crop_to_skin,,face features visible -> cut skin-only patches
+426a4542e6f2,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+438be24e659b,drop,,pixelated
+43a176e3849c,crop_to_skin,,face features visible -> cut skin-only patches
+444856e8a515,drop,,pixelated
+482e20ba6bc7,drop,,ambiguous_inflammation
+49fc9865b0ea,drop,,ambiguous_inflammation
+4ae0f681d798,drop,,watermark
+4ebaadf381b6,crop_to_skin,,face features visible -> cut skin-only patches
+4ebcc1eb6be6,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+4edfec6b76f3,drop,,not_acne
+4ff62dafb7b5,drop,,ambiguous_inflammation
+501bc71fcca7,drop,,ambiguous_lesion
+5315ef78f934,drop,,ambiguous_inflammation
+532e8348ab01,drop,,watermark
+55529677c422,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+564f9ab64381,drop,,ambiguous_inflammation
+56a9b32ae213,drop,,pixelated
+57485256210f,drop,,ambiguous_inflammation
+574c48fcfc5b,drop,,ambiguous_inflammation
+57c1babe8a57,crop_to_skin,,face features visible -> cut skin-only patches
+5c874ccdb293,drop,,ambiguous_lesion
+5d821325aa1a,drop,,ambiguous_lesion
+5da48314868a,drop,,ambiguous_inflammation
+5e5e957f1cb5,drop,,pixelated
+5ef5a2a186bc,drop,,ambiguous_inflammation
+5ef882bf0797,drop,,pixelated
+61773177e698,drop,,ambiguous_inflammation
+6257e537109a,drop,,stock_or_illustration
+63c8a9b92bc8,drop,,pixelated
+6540611808e3,drop,,pixelated
+659df1fe949b,drop,,ambiguous_lesion
+661cbababb56,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+67eb5076bcac,drop,,ambiguous_lesion
+68260e153c92,drop,,ambiguous_inflammation
+683d1803e090,drop,,ambiguous_lesion
+685b0f51ca1c,drop,,ambiguous_inflammation
+68d786b289c7,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+6a1793732b59,drop,,ambiguous_inflammation
+6a301e68fedc,drop,,not_acne
+6ab42e42485d,drop,,pixelated
+6af2d368ed78,drop,,pixelated
+6af3a759e437,drop,,ambiguous_inflammation
+6bd52d592c04,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+6e9cdd53d5b2,drop,,pixelated
+6f5d29609e03,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+71d57be9087f,drop,,ambiguous_inflammation
+71de921bbba0,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+7225ca95aecc,crop_to_skin,,face features visible -> cut skin-only patches
+72cf0c208dee,drop,,pixelated
+739104faf893,drop,,ambiguous_inflammation
+74460b835e74,drop,,ambiguous_lesion
+7554076a45c4,crop_to_skin,,face features visible -> cut skin-only patches
+76bb9bbe7ea5,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+792419a53165,drop,,pixelated
+79bb0d767d99,drop,,collage
+7b68c768c722,drop,,not_acne
+7baf9a39d0e0,drop,,watermark
+7e16b018a95e,drop,,pixelated
+7e8a35f39d85,drop,,ambiguous_lesion
+7edc7597f289,drop,,pixelated
+7f9cb92ec92a,drop,,pixelated
+7f9ea1b736cb,drop,,pixelated
+8074d0c26c5f,drop,,pixelated
+807f1cc70998,drop,,ambiguous_inflammation
+8281605b4a30,drop,,tool_in_photo
+8403e4f4d56b,drop,,render_or_illustration
+857d35763981,drop,,ambiguous_lesion
+8724e0d7280a,drop,,pixelated
+8b69d0ec2d10,drop,,ambiguous_inflammation
+8b92c7298bcb,crop_to_skin,,face features visible -> cut skin-only patches
+8bd1aa09395e,crop_to_skin,,face features visible -> cut skin-only patches
+8c48b54529b2,drop,,ambiguous_inflammation
+8e8515d8386e,drop,,ambiguous_inflammation
+8e9068e4371e,drop,,ambiguous_lesion
+8ea026cff71a,drop,,pixelated
+8f2528b605bb,drop,,ambiguous_inflammation
+9098156045b6,drop,,stock_or_illustration
+90a007cc5371,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+9278cde723ee,drop,,ambiguous_inflammation
+935268ad41d3,drop,,watermark
+9417a49daef4,drop,,pixelated
+9419523dfb7c,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+94ee9f8a127f,drop,,ambiguous_inflammation
+9594238fc200,drop,,not_acne
+95aafb3b735e,drop,,ambiguous_inflammation
+99643e207ef4,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+997c6acd51d3,drop,,ambiguous_inflammation
+99ebce29bc79,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+9a47cb68fc67,crop_to_skin,,face features visible -> cut skin-only patches
+9ac1304fa63d,drop,,not_face
+9b0d113b20b7,drop,,stock_or_illustration
+9bc074d9f0c6,drop,,ambiguous_inflammation
+9c2976df607b,drop,,ambiguous_inflammation
+9e1130f5434e,drop,,not_face
+9e9a0ac8ffad,drop,,not_acne
+9eaafc47dea5,drop,,watermark
+9ec6518557cc,drop,,pixelated
+9f2ad01614df,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+9fc8c77af39c,drop,,pixelated
+a0c955cab0ba,drop,,pixelated
+a0ca8d5be25b,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+a11a72bdb68d,drop,,collage
+a2aa134b0fc7,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+a2be1e349b1b,drop,,watermark
+a3e9fe017626,drop,,stock_or_illustration
+a4b5ddb2ba7f,drop,,ambiguous_inflammation
+a61efad1a643,drop,,ambiguous_inflammation
+a6e85279e4f6,drop,,pixelated
+a7b707bb4d1b,crop_to_skin,,face features visible -> cut skin-only patches
+a87973e0b680,drop,,not_acne
+a8c150a72999,drop,,ambiguous_inflammation
+a96d82275e5e,drop,,pixelated
+aa2ad56459ab,drop,,ambiguous_inflammation
+ac0b5da2ab21,drop,,ambiguous_inflammation
+acd963a83300,drop,,pixelated
+ad8b5c493f27,drop,,stock_or_illustration
+adff364da137,drop,,pixelated
+ae052dc528c1,crop_to_skin,,face features visible -> cut skin-only patches
+af0a7a95ddf3,drop,,ambiguous_inflammation
+b0e01495f03b,drop,,ambiguous_inflammation
+b11fc1af80aa,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+b24c0575a83b,drop,,not_acne
+b34b9057717e,drop,,watermark
+b3865df47bf6,drop,,collage
+b4b588a7a220,crop_to_skin,,face features visible -> cut skin-only patches
+b517b70e250b,drop,,ambiguous_inflammation
+b52bfdabbb7d,drop,,ambiguous_inflammation
+b60b52e7a290,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+ba1a8bc3f4c5,drop,,ambiguous_inflammation
+bd66bc6a716e,drop,,pixelated
+bd781167908a,drop,,render_or_illustration
+c191e03ef00d,crop_to_skin,,face features visible -> cut skin-only patches
+c256c66ede5f,drop,,ambiguous_lesion
+c29291dbc32d,drop,,not_face
+c40821b9eae7,crop_to_skin,,face features visible -> cut skin-only patches
+c4b2fdd88535,drop,,not_acne
+c59b108b1507,drop,,ambiguous_inflammation
+c5e656c0b84d,drop,,collage
+c69d2c398299,drop,,ambiguous_inflammation
+c6a7188f56a1,drop,,pixelated
+c7a44615e6e9,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+c942fa7adab1,crop_to_skin,,face features visible -> cut skin-only patches
+c9f502ad4a2b,drop,,collage
+cdeff51c94fe,drop,,ambiguous_inflammation
+ce732f9bed93,crop_to_skin,,face features visible -> cut skin-only patches
+d4c4eb83cadb,drop,,ambiguous_lesion
+d55f5494cc78,crop_to_skin,,face features visible -> cut skin-only patches
+da5319ddcdc0,drop,,render_or_illustration
+da61d9cbcb18,drop,,pixelated
+dac11b8f08b3,drop,,pixelated
+dbcff31b5582,drop,,watermark
+e0fbf582f3bb,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+e15d872ae92e,drop,,ambiguous_inflammation
+e286cb243cea,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+e343442ab7d4,drop,,stock_or_illustration
+e501d65bd500,drop,,ambiguous_inflammation
+e5aa7d480eb9,drop,,ambiguous_inflammation
+e6ce8512e72b,drop,,ambiguous_inflammation
+e7ad12a85d89,drop,,pixelated
+e831cd75af94,drop,,pixelated
+e83791bc2fdd,drop,,pixelated
+e9589fd1144f,drop,,stock_or_illustration
+e993a5b9727b,drop,,watermark
+e9c7efedf38f,crop_to_skin,,face features visible -> cut skin-only patches
+ea1c97929294,drop,,ambiguous_inflammation
+ea349c8a5d2d,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+ea9282624435,drop,,watermark
+ed287a4f5ff2,drop,,ambiguous_lesion
+edd09507dfde,drop,,ambiguous_inflammation
+ee0b561fdeea,drop,,pixelated
+efc1f60c3e34,drop,,watermark
+f004819ea165,drop,,ambiguous_inflammation
+f05dc5653740,drop,,ambiguous_inflammation
+f0b65c70fab5,drop,,pixelated
+f1147961df30,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+f115b65788e5,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+f118704f58ac,crop_to_skin,,face features visible -> cut skin-only patches
+f16fa13a4965,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+f561ce614cac,drop,,pixelated
+f5866fdd20a7,relabel,Inflammatory,inflamed (red) lesion visible -> Inflammatory under the any-inflammatory-lesion rule
+f6a6acff2124,drop,,scar
+f870ad110a03,drop,,watermark
+f93e6b8f0d91,drop,,overexposed
+f997e1743dc3,drop,,ambiguous_inflammation
+fa39291a98f5,drop,,pixelated
+fa809bcb1132,drop,,ambiguous_lesion
+facdcc83f6d2,drop,,pixelated
+fb8d5c803aa6,drop,,ambiguous_inflammation
+fbf2e8060965,drop,,ambiguous_inflammation
+ff93f90fab54,drop,,ambiguous_inflammation

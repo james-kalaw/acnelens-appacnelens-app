@@ -1,0 +1,86 @@
+file,dataset_label,p_clear,p_noninf,p_inf,app_result,shown
+test/Clear Skin/00000.jpg,Clear Skin,0.9591,0.0176,0.0233,Clear Skin,True
+test/Clear Skin/00001.jpg,Clear Skin,0.636,0.0378,0.3262,Clear Skin,True
+test/Clear Skin/00002.jpg,Clear Skin,0.8184,0.1262,0.0554,Clear Skin,True
+test/Clear Skin/00003.jpg,Clear Skin,0.9208,0.0543,0.0249,Clear Skin,True
+test/Clear Skin/00004.jpg,Clear Skin,0.9251,0.0452,0.0297,Clear Skin,True
+test/Clear Skin/00005.png,Clear Skin,0.9524,0.0199,0.0277,Clear Skin,True
+test/Clear Skin/00006.png,Clear Skin,0.8252,0.0382,0.1366,Clear Skin,True
+test/Clear Skin/00007.png,Clear Skin,0.8951,0.0609,0.044,Clear Skin,True
+test/Clear Skin/00008.png,Clear Skin,0.8819,0.0598,0.0583,Clear Skin,True
+test/Clear Skin/00009.png,Clear Skin,0.9791,0.0111,0.0099,Clear Skin,True
+test/Clear Skin/00010.png,Clear Skin,0.9447,0.0222,0.0331,Clear Skin,True
+test/Clear Skin/00011.png,Clear Skin,0.9541,0.0186,0.0273,Clear Skin,True
+test/Clear Skin/00012.png,Clear Skin,0.961,0.0188,0.0202,Clear Skin,True
+test/Clear Skin/00013.png,Clear Skin,0.9014,0.0507,0.048,Clear Skin,True
+test/Clear Skin/00014.png,Clear Skin,0.9627,0.0224,0.0149,Clear Skin,True
+test/Clear Skin/00015.png,Clear Skin,0.9413,0.0261,0.0326,Clear Skin,True
+test/Clear Skin/00016.png,Clear Skin,0.9571,0.0253,0.0175,Clear Skin,True
+test/Clear Skin/00017.png,Clear Skin,0.8064,0.0695,0.124,Clear Skin,True
+test/Clear Skin/00018.png,Clear Skin,0.963,0.0174,0.0197,Clear Skin,True
+test/Clear Skin/00019.png,Clear Skin,0.8044,0.1175,0.0781,Clear Skin,True
+test/Clear Skin/00020.png,Clear Skin,0.9454,0.0223,0.0323,Clear Skin,True
+test/Clear Skin/00021.png,Clear Skin,0.9466,0.0209,0.0325,Clear Skin,True
+test/Clear Skin/00022.png,Clear Skin,0.9366,0.0369,0.0265,Clear Skin,True
+test/Clear Skin/00023.png,Clear Skin,0.8912,0.0738,0.0349,Clear Skin,True
+test/Clear Skin/00024.png,Clear Skin,0.8121,0.0317,0.1561,Clear Skin,True
+test/Non-Inflammatory/00050.jpeg,Non-Inflammatory,0.0401,0.9368,0.0231,Non-Inflammatory,True
+test/Non-Inflammatory/00051.jpeg,Non-Inflammatory,0.0483,0.9406,0.0111,Non-Inflammatory,True
+test/Non-Inflammatory/00052.jpg,Non-Inflammatory,0.0295,0.9159,0.0545,Non-Inflammatory,True
+test/Non-Inflammatory/00053.jpg,Non-Inflammatory,0.0335,0.7863,0.1802,Non-Inflammatory,True
+test/Non-Inflammatory/00054.jpg,Non-Inflammatory,0.0196,0.9484,0.032,Non-Inflammatory,True
+test/Non-Inflammatory/00055.jpg,Non-Inflammatory,0.0369,0.5382,0.4249,Inflammatory,True
+test/Non-Inflammatory/00056.jpg,Non-Inflammatory,0.0407,0.8789,0.0804,Non-Inflammatory,True
+test/Non-Inflammatory/00057.jpg,Non-Inflammatory,0.0277,0.9616,0.0107,Non-Inflammatory,True
+test/Non-Inflammatory/00058.jpeg,Non-Inflammatory,0.1182,0.8345,0.0473,Non-Inflammatory,True
+test/Non-Inflammatory/00059.jpeg,Non-Inflammatory,0.0529,0.9191,0.028,Non-Inflammatory,True
+test/Non-Inflammatory/00060.png,Non-Inflammatory,0.1588,0.7989,0.0423,Non-Inflammatory,True
+test/Non-Inflammatory/00061.png,Non-Inflammatory,0.0551,0.8939,0.051,Non-Inflammatory,True
+test/Non-Inflammatory/00062.jpeg,Non-Inflammatory,0.0452,0.9229,0.0318,Non-Inflammatory,True
+test/Non-Inflammatory/00063.jpeg,Non-Inflammatory,0.005,0.9868,0.0081,Non-Inflammatory,True
+test/Non-Inflammatory/00064.jpeg,Non-Inflammatory,0.1392,0.457,0.4038,Inflammatory,True
+test/Non-Inflammatory/00065.jpeg,Non-Inflammatory,0.4204,0.4727,0.1068,Non-Inflammatory,False
+test/Non-Inflammatory/00066.jpeg,Non-Inflammatory,0.0284,0.9477,0.0238,Non-Inflammatory,True
+test/Non-Inflammatory/00067.png,Non-Inflammatory,0.2497,0.6975,0.0528,Non-Inflammatory,True
+test/Non-Inflammatory/00068.jpeg,Non-Inflammatory,0.0448,0.6651,0.2901,Non-Inflammatory,True
+test/Non-Inflammatory/00069.jpeg,Non-Inflammatory,0.0242,0.9636,0.0122,Non-Inflammatory,True
+test/Non-Inflammatory/00070.jpeg,Non-Inflammatory,0.054,0.6437,0.3023,Non-Inflammatory,True
+test/Non-Inflammatory/00071.jpg,Non-Inflammatory,0.043,0.9094,0.0476,Non-Inflammatory,True
+test/Non-Inflammatory/00072.jpg,Non-Inflammatory,0.0095,0.9471,0.0434,Non-Inflammatory,True
+test/Non-Inflammatory/00073.jpg,Non-Inflammatory,0.0438,0.9127,0.0435,Non-Inflammatory,True
+test/Non-Inflammatory/00074.jpg,Non-Inflammatory,0.0204,0.9596,0.02,Non-Inflammatory,True
+test/Inflammatory/00025.jpeg,Inflammatory,0.0153,0.1041,0.8807,Inflammatory,True
+test/Inflammatory/00026.jpeg,Inflammatory,0.0191,0.0451,0.9358,Inflammatory,True
+test/Inflammatory/00027.jpeg,Inflammatory,0.0356,0.7749,0.1895,Non-Inflammatory,True
+test/Inflammatory/00028.jpeg,Inflammatory,0.0343,0.0251,0.9406,Inflammatory,True
+test/Inflammatory/00029.png,Inflammatory,0.0232,0.0326,0.9442,Inflammatory,True
+test/Inflammatory/00030.jpeg,Inflammatory,0.0231,0.0132,0.9637,Inflammatory,True
+test/Inflammatory/00031.jpeg,Inflammatory,0.0355,0.0826,0.8819,Inflammatory,True
+test/Inflammatory/00032.jpeg,Inflammatory,0.0182,0.0296,0.9523,Inflammatory,True
+test/Inflammatory/00033.jpeg,Inflammatory,0.0433,0.0444,0.9123,Inflammatory,True
+test/Inflammatory/00034.jpeg,Inflammatory,0.0383,0.0241,0.9376,Inflammatory,True
+test/Inflammatory/00035.jpeg,Inflammatory,0.0318,0.047,0.9212,Inflammatory,True
+test/Inflammatory/00036.jpeg,Inflammatory,0.0547,0.6265,0.3187,Non-Inflammatory,True
+test/Inflammatory/00037.jpeg,Inflammatory,0.0914,0.043,0.8656,Inflammatory,True
+test/Inflammatory/00038.jpeg,Inflammatory,0.0238,0.1685,0.8077,Inflammatory,True
+test/Inflammatory/00039.jpeg,Inflammatory,0.0151,0.0076,0.9773,Inflammatory,True
+test/Inflammatory/00040.jpeg,Inflammatory,0.0427,0.2757,0.6816,Inflammatory,True
+test/Inflammatory/00041.jpeg,Inflammatory,0.0202,0.0158,0.9641,Inflammatory,True
+test/Inflammatory/00042.jpeg,Inflammatory,0.0943,0.0472,0.8585,Inflammatory,True
+test/Inflammatory/00043.jpg,Inflammatory,0.0395,0.0424,0.9182,Inflammatory,True
+test/Inflammatory/00044.jpeg,Inflammatory,0.0228,0.0169,0.9602,Inflammatory,True
+test/Inflammatory/00045.jpeg,Inflammatory,0.0527,0.0434,0.9038,Inflammatory,True
+test/Inflammatory/00046.jpeg,Inflammatory,0.0643,0.2154,0.7203,Inflammatory,True
+test/Inflammatory/00047.jpeg,Inflammatory,0.0383,0.036,0.9257,Inflammatory,True
+test/Inflammatory/00048.jpg,Inflammatory,0.0586,0.0386,0.9028,Inflammatory,True
+test/Inflammatory/00049.jpg,Inflammatory,0.0222,0.1635,0.8143,Inflammatory,True
+scin_14.jpg,"SCIN (acne, real-world)",0.0637,0.0542,0.8822,Inflammatory,True
+scin_18.jpg,"SCIN (acne, real-world)",0.0398,0.0381,0.9221,Inflammatory,True
+scin_2.jpg,"SCIN (acne, real-world)",0.0433,0.173,0.7837,Inflammatory,True
+scin_26.jpg,"SCIN (acne, real-world)",0.051,0.1745,0.7746,Inflammatory,True
+scin_29.jpg,"SCIN (acne, real-world)",0.015,0.0335,0.9515,Inflammatory,True
+scin_33.jpg,"SCIN (acne, real-world)",0.4686,0.1142,0.4173,Inflammatory,True
+scin_39.jpg,"SCIN (acne, real-world)",0.0698,0.1134,0.8167,Inflammatory,True
+scin_72.jpg,"SCIN (acne, real-world)",0.0651,0.0435,0.8914,Inflammatory,True
+scin_75.jpg,"SCIN (acne, real-world)",0.166,0.6108,0.2232,Non-Inflammatory,True
+scin_86.jpg,"SCIN (acne, real-world)",0.0362,0.0251,0.9388,Inflammatory,True

@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>AcneLens</title>
+  <meta name="description" content="AcneLens — on-device acne check and ingredient guidance based on dermatology guidelines. A guidance tool, not a diagnosis.">
+  <meta name="theme-color" content="#16363B">
+  <meta name="color-scheme" content="light">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="AcneLens">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/instrument-serif-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/app.css">
+</head>
+<body>
+  <!-- Splash -->
+  <div id="splash" aria-hidden="true">
+    <div class="splash-inner">
+      <svg class="splash-mark" viewBox="0 0 512 512" role="img" aria-label="AcneLens">
+        <g fill="none" stroke="#F6EEE7" stroke-width="30" stroke-linecap="round">
+          <path class="br" d="M120 196 V160 Q120 120 160 120 H196"/>
+          <path class="br" d="M316 120 H352 Q392 120 392 160 V196"/>
+          <path class="br" d="M392 316 V352 Q392 392 352 392 H316"/>
+          <path class="br" d="M196 392 H160 Q120 392 120 352 V316"/>
+        </g>
+        <circle class="glow" cx="256" cy="256" r="74" fill="#F0C7B8"/>
+        <circle class="core" cx="256" cy="256" r="34" fill="#E2725B"/>
+      </svg>
+      <img class="splash-word" src="assets/icons/wordmark-dark.svg" alt="AcneLens">
+      <div class="splash-tag">Skin guidance, grounded in dermatology guidelines</div>
+    </div>
+  </div>
+
+  <main id="app">
+    <!-- Onboarding -->
+    <section class="screen no-tabs" id="s-onboarding" aria-labelledby="ob-title">
+      <div class="ob-hero">
+        <svg viewBox="0 0 512 512" aria-hidden="true">
+          <circle class="ring" cx="256" cy="256" r="150" fill="#F0C7B8" opacity=".35"/>
+          <g fill="none" stroke="#16363B" stroke-width="26" stroke-linecap="round">
+            <path d="M120 196 V160 Q120 120 160 120 H196"/><path d="M316 120 H352 Q392 120 392 160 V196"/>
+            <path d="M392 316 V352 Q392 392 352 392 H316"/><path d="M196 392 H160 Q120 392 120 352 V316"/>
+          </g>
+          <circle cx="256" cy="256" r="34" fill="#E2725B"/>
+        </svg>
+      </div>
+      <div class="reveal">
+        <p class="eyebrow">Welcome to AcneLens</p>
+        <h1 id="ob-title">Before you <em>start</em></h1>
+        <div>
+          <div class="point"><div class="ico"><i data-icon="info"></i></div><div><h3>Guidance, not a diagnosis</h3>
+            <p>AcneLens sorts what it sees into <b>Clear Skin</b>, <b>Non-Inflammatory</b> or <b>Inflammatory</b> acne, then suggests ingredients from published dermatology guidelines. Only a dermatologist can diagnose.</p></div></div>
+          <div class="point"><div class="ico"><i data-icon="lock"></i></div><div><h3>Your photo stays on this phone</h3>
+            <p>The AI runs on your device. Photos are never uploaded, and nothing is kept unless you add it to your journal.</p></div></div>
+          <div class="point"><div class="ico"><i data-icon="user"></i></div><div><h3>Know your skin first</h3>
+            <p>You'll answer 4 quick questions about your skin type, how sensitive it is, and what you already use. Honest answers keep your routine safe.</p></div></div>
+        </div>
+        <div class="stack" style="margin-top:18px">
+          <button class="btn btn-primary" id="ob-continue">I understand — let's begin <i data-icon="arrow-right"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Home -->
+    <section class="screen" id="s-home" aria-labelledby="home-title">
+      <div class="topbar">
+        <div class="brandmark"><img class="mark" src="assets/icons/icon-192.png" alt=""><img class="word" src="assets/icons/wordmark-light.svg" alt="AcneLens"></div>
+      </div>
+      <div class="reveal">
+        <p class="eyebrow">New skin check</p>
+        <h1 id="home-title">Let's take a <em>close</em> look.</h1>
+        <p class="lead">Photograph one area of your skin up close — a cheek, your forehead or your chin.</p>
+        <div class="viewfinder-hero" aria-hidden="true">
+          <div class="spot"></div><div class="spot s2"></div><div class="spot s3"></div>
+          <div class="frame"><span></span><span></span><span></span><span></span></div>
+          <div class="caption">Fill the frame with skin only</div>
+        </div>
+        <div class="tips">
+          <div class="tip"><i data-icon="scan"></i>Close-up, not a selfie</div>
+          <div class="tip"><i data-icon="sun"></i>Bright, even light</div>
+          <div class="tip"><i data-icon="hand"></i>Hold steady</div>
+        </div>
+        <div class="stack">
+          <button class="btn btn-primary" id="btn-camera"><i data-icon="camera"></i>Take a photo</button>
+          <button class="btn btn-ghost" id="btn-gallery"><i data-icon="image"></i>Choose from gallery</button>
+        </div>
+        <div class="status-line loading" id="model-status" role="status"><span class="dot"></span><span>Preparing the AI on your phone…</span></div>
+        <button class="chip install-chip" id="install-chip" hidden><i data-icon="download"></i>Install AcneLens on this phone</button>
+      </div>
+    </section>
+
+    <!-- Frame / crop -->
+    <section class="screen no-tabs" id="s-frame" aria-labelledby="frame-title">
+      <div class="topbar">
+        <button class="icon-btn" data-back aria-label="Back"><i data-icon="chev-left"></i></button>
+        <span class="small muted" style="font-weight:700">Step 1 of 3 · Frame</span>
+        <span style="width:40px"></span>
+      </div>
+      <h2 id="frame-title">Frame one area</h2>
+      <p class="small muted" style="margin:0 0 14px">Drag and pinch so <b>only skin</b> fills the square — no eyes, lips or hair.</p>
+      <div class="cropper" id="cropper" aria-label="Photo framing area. Drag to move, pinch or use the slider to zoom.">
+        <img id="crop-img" alt="Your photo">
+        <div class="grid"></div>
+        <div class="frame"><span></span><span></span><span></span><span></span></div>
+      </div>
+      <div class="zoom"><i data-icon="zoom-out"></i><input type="range" id="zoom" min="1" max="4" step="0.01" value="1" aria-label="Zoom"><i data-icon="zoom-in"></i></div>
+      <div class="quality chips" id="quality" aria-live="polite"></div>
+      <div class="stack">
+        <button class="btn btn-coral" id="btn-analyze"><i data-icon="scan"></i>Analyze this area</button>
+        <button class="btn btn-text" id="btn-retake"><i data-icon="refresh"></i>Use a different photo</button>
+      </div>
+    </section>
+
+    <!-- Analyzing -->
+    <section class="screen no-tabs" id="s-analyzing" aria-live="polite">
+      <div style="text-align:center;margin-top:8px"><p class="eyebrow">Analyzing on your phone</p><h2>Looking closely…</h2></div>
+      <div class="scan" aria-hidden="true">
+        <div class="clip"><img id="scan-img" alt=""><div class="beam"></div></div>
+        <div class="pulse"></div>
+        <div class="frame"><span></span><span></span><span></span><span></span></div>
+      </div>
+      <ul class="steps" id="scan-steps">
+        <li><span class="tick"><i data-icon="check"></i></span>Checking photo quality</li>
+        <li><span class="tick"><i data-icon="check"></i></span>Reading skin texture</li>
+        <li><span class="tick"><i data-icon="check"></i></span>Comparing with learned patterns</li>
+      </ul>
+    </section>
+
+    <!-- Quiz -->
+    <section class="screen no-tabs" id="s-quiz">
+      <div class="topbar">
+        <button class="icon-btn" id="quiz-back" aria-label="Previous question"><i data-icon="chev-left"></i></button>
+        <span class="small muted" style="font-weight:700" id="quiz-count">Question 1 of 4</span>
+        <span style="width:40px"></span>
+      </div>
+      <div class="progress" aria-hidden="true"><span id="quiz-progress"></span></div>
+      <div id="quiz-body"></div>
+    </section>
+
+    <!-- Results -->
+    <section class="screen" id="s-results"><div id="results-body"></div></section>
+
+    <!-- Journal -->
+    <section class="screen" id="s-journal">
+      <div class="topbar"><div><p class="eyebrow" style="margin:0">Progress tracker</p></div></div>
+      <h1>Your <em>journal</em></h1>
+      <p class="small muted" style="margin-top:-4px">Saved only on this phone. Export it any time as a spreadsheet file.</p>
+      <div id="journal-list" style="margin-top:18px"></div>
+      <div class="stack" style="margin-top:18px" id="journal-actions">
+        <button class="btn btn-ghost" id="btn-export"><i data-icon="download"></i>Export journal (CSV)</button>
+      </div>
+    </section>
+
+    <!-- Settings -->
+    <section class="screen" id="s-settings">
+      <h1>About &amp; <em>settings</em></h1>
+      <div class="list-label">Understanding AcneLens</div>
+      <div class="list">
+        <button class="list-item" data-sheet="how"><span class="ico"><i data-icon="scan"></i></span>How AcneLens decides<i class="chev" data-icon="chev-right"></i></button>
+        <button class="list-item" data-sheet="validation"><span class="ico"><i data-icon="seal"></i></span>How we tested it<i class="chev" data-icon="chev-right"></i></button>
+        <button class="list-item" data-sheet="refs"><span class="ico"><i data-icon="book"></i></span>Guidelines &amp; references<i class="chev" data-icon="chev-right"></i></button>
+      </div>
+      <div class="list-label">Your data</div>
+      <div class="list">
+        <button class="list-item" data-sheet="privacy"><span class="ico"><i data-icon="lock"></i></span>Privacy<i class="chev" data-icon="chev-right"></i></button>
+        <button class="list-item" data-sheet="install"><span class="ico"><i data-icon="download"></i></span>Install on your phone<i class="chev" data-icon="chev-right"></i></button>
+        <button class="list-item danger" id="btn-reset"><span class="ico"><i data-icon="trash"></i></span>Delete all AcneLens data</button>
+      </div>
+      <div class="list-label">Important</div>
+      <div class="list">
+        <button class="list-item" data-sheet="disclaimer"><span class="ico"><i data-icon="info"></i></span>Disclaimer<i class="chev" data-icon="chev-right"></i></button>
+        <button class="list-item" data-sheet="credits"><span class="ico"><i data-icon="image"></i></span>Data &amp; image credits<i class="chev" data-icon="chev-right"></i></button>
+      </div>
+      <div class="ver"><img src="assets/icons/wordmark-light.svg" alt="AcneLens"><div class="tiny muted" id="app-version"></div></div>
+    </section>
+  </main>
+
+  <nav class="tabbar" id="tabbar" aria-label="Main">
+    <button class="tab" data-tab="home" aria-current="page"><i data-icon="scan"></i>Check</button>
+    <button class="tab" data-tab="journal"><i data-icon="book"></i>Journal</button>
+    <button class="tab" data-tab="settings"><i data-icon="sliders"></i>About</button>
+  </nav>
+
+  <div class="scrim" id="scrim" hidden></div>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" hidden><div class="grab"></div><div id="sheet-content"></div></div>
+  <div class="toast" id="toast" role="status"></div>
+
+  <input type="file" id="file-camera" accept="image/*" capture="environment" hidden>
+  <input type="file" id="file-gallery" accept="image/*" hidden>
+  <noscript><p style="padding:20px">AcneLens needs JavaScript to run.</p></noscript>
+  <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>

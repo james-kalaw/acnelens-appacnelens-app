@@ -1,0 +1,11 @@
+# local data / build outputs (datasets are not redistributed in this repo)
+*.keras
+data/
+dataset/
+raw/
+__pycache__/
+.venv/
+venv/
+node_modules/
+docs/_parity*
+.DS_Store

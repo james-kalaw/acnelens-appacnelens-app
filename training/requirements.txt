@@ -1,0 +1,14 @@
+# Python 3.12 — training & evaluation pipeline (not needed to run the app)
+tensorflow==2.21.0
+keras==3.15.1
+tf2onnx==1.17.0
+onnx
+onnxruntime
+mediapipe==1.2.3
+pillow
+imagehash
+numpy
+pandas
+scikit-learn
+openpyxl
+tf_keras  # only for 06_baseline_old_model.py

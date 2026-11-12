@@ -1,0 +1,310 @@
+{
+ "val_decision_rule_all": {
+  "n": 147,
+  "accuracy": 0.986,
+  "accuracy_95ci": [
+   0.952,
+   0.996
+  ],
+  "balanced_accuracy": 0.987,
+  "cohen_kappa": 0.977,
+  "per_class": {
+   "Clear Skin": {
+    "recall": 1.0,
+    "precision": 0.962,
+    "n": 25
+   },
+   "Non-Inflammatory": {
+    "recall": 0.974,
+    "precision": 0.974,
+    "n": 38
+   },
+   "Inflammatory": {
+    "recall": 0.988,
+    "precision": 1.0,
+    "n": 84
+   }
+  },
+  "confusion_matrix": [
+   [
+    25,
+    0,
+    0
+   ],
+   [
+    1,
+    37,
+    0
+   ],
+   [
+    0,
+    1,
+    83
+   ]
+  ]
+ },
+ "t_inf": 0.3333,
+ "gate": 0.5,
+ "keras_onnx_max_abs_diff": 2.980232238769531e-07,
+ "val_gate_sweep": [
+  {
+   "threshold": 0.5,
+   "missed_errors": 1,
+   "unnecessary_rejections": 1,
+   "shown": 145,
+   "total": 147
+  },
+  {
+   "threshold": 0.6,
+   "missed_errors": 1,
+   "unnecessary_rejections": 2,
+   "shown": 144,
+   "total": 147
+  },
+  {
+   "threshold": 0.7,
+   "missed_errors": 1,
+   "unnecessary_rejections": 5,
+   "shown": 141,
+   "total": 147
+  },
+  {
+   "threshold": 0.8,
+   "missed_errors": 1,
+   "unnecessary_rejections": 5,
+   "shown": 141,
+   "total": 147
+  },
+  {
+   "threshold": 0.9,
+   "missed_errors": 1,
+   "unnecessary_rejections": 21,
+   "shown": 125,
+   "total": 147
+  }
+ ],
+ "test_gate_sweep": [
+  {
+   "threshold": 0.5,
+   "missed_errors": 4,
+   "unnecessary_rejections": 1,
+   "shown": 74,
+   "total": 75
+  },
+  {
+   "threshold": 0.6,
+   "missed_errors": 4,
+   "unnecessary_rejections": 1,
+   "shown": 74,
+   "total": 75
+  },
+  {
+   "threshold": 0.7,
+   "missed_errors": 3,
+   "unnecessary_rejections": 5,
+   "shown": 69,
+   "total": 75
+  },
+  {
+   "threshold": 0.8,
+   "missed_errors": 2,
+   "unnecessary_rejections": 7,
+   "shown": 66,
+   "total": 75
+  },
+  {
+   "threshold": 0.9,
+   "missed_errors": 2,
+   "unnecessary_rejections": 18,
+   "shown": 55,
+   "total": 75
+  }
+ ],
+ "val_argmax": {
+  "n": 147,
+  "accuracy": 0.98,
+  "accuracy_95ci": [
+   0.942,
+   0.993
+  ],
+  "balanced_accuracy": 0.983,
+  "cohen_kappa": 0.965,
+  "per_class": {
+   "Clear Skin": {
+    "recall": 1.0,
+    "precision": 0.962,
+    "n": 25
+   },
+   "Non-Inflammatory": {
+    "recall": 0.974,
+    "precision": 0.949,
+    "n": 38
+   },
+   "Inflammatory": {
+    "recall": 0.976,
+    "precision": 1.0,
+    "n": 84
+   }
+  },
+  "confusion_matrix": [
+   [
+    25,
+    0,
+    0
+   ],
+   [
+    1,
+    37,
+    0
+   ],
+   [
+    0,
+    2,
+    82
+   ]
+  ]
+ },
+ "test_argmax": {
+  "n": 75,
+  "accuracy": 0.973,
+  "accuracy_95ci": [
+   0.908,
+   0.993
+  ],
+  "balanced_accuracy": 0.973,
+  "cohen_kappa": 0.96,
+  "per_class": {
+   "Clear Skin": {
+    "recall": 1.0,
+    "precision": 1.0,
+    "n": 25
+   },
+   "Non-Inflammatory": {
+    "recall": 1.0,
+    "precision": 0.926,
+    "n": 25
+   },
+   "Inflammatory": {
+    "recall": 0.92,
+    "precision": 1.0,
+    "n": 25
+   }
+  },
+  "confusion_matrix": [
+   [
+    25,
+    0,
+    0
+   ],
+   [
+    0,
+    25,
+    0
+   ],
+   [
+    0,
+    2,
+    23
+   ]
+  ]
+ },
+ "test_decision_rule_all": {
+  "n": 75,
+  "accuracy": 0.947,
+  "accuracy_95ci": [
+   0.871,
+   0.979
+  ],
+  "balanced_accuracy": 0.947,
+  "cohen_kappa": 0.92,
+  "per_class": {
+   "Clear Skin": {
+    "recall": 1.0,
+    "precision": 1.0,
+    "n": 25
+   },
+   "Non-Inflammatory": {
+    "recall": 0.92,
+    "precision": 0.92,
+    "n": 25
+   },
+   "Inflammatory": {
+    "recall": 0.92,
+    "precision": 0.92,
+    "n": 25
+   }
+  },
+  "confusion_matrix": [
+   [
+    25,
+    0,
+    0
+   ],
+   [
+    0,
+    23,
+    2
+   ],
+   [
+    0,
+    2,
+    23
+   ]
+  ]
+ },
+ "test_decision_rule_after_gate": {
+  "n": 74,
+  "accuracy": 0.946,
+  "accuracy_95ci": [
+   0.869,
+   0.979
+  ],
+  "balanced_accuracy": 0.946,
+  "cohen_kappa": 0.919,
+  "per_class": {
+   "Clear Skin": {
+    "recall": 1.0,
+    "precision": 1.0,
+    "n": 25
+   },
+   "Non-Inflammatory": {
+    "recall": 0.917,
+    "precision": 0.917,
+    "n": 24
+   },
+   "Inflammatory": {
+    "recall": 0.92,
+    "precision": 0.92,
+    "n": 25
+   }
+  },
+  "confusion_matrix": [
+   [
+    25,
+    0,
+    0
+   ],
+   [
+    0,
+    22,
+    2
+   ],
+   [
+    0,
+    2,
+    23
+   ]
+  ]
+ },
+ "test_rejected_by_gate": 1,
+ "scin_real_world": {
+  "n": 10,
+  "predicted": {
+   "Clear Skin": 0,
+   "Non-Inflammatory": 1,
+   "Inflammatory": 9
+  },
+  "rejected_by_gate": 0,
+  "called_clear_skin": 0
+ }
+}
