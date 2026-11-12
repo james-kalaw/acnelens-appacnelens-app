@@ -2,7 +2,7 @@ import { loadModel, getConfig, fileToImage, cropSquare, checkQuality, classify }
 import { recommend, RULE_TEXT, AAD_2024, JEADV_2024 } from "./rules.js";
 import { addEntry, allEntries, deleteEntry, clearAll, toCSV } from "./journal.js";
 
-const VERSION = "2.1.0";
+const VERSION = "2.1.1";
 const MODEL_DATE = "2026-11-12";
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -123,8 +123,11 @@ function setStatus(kind, text) {
 function warmModel() {
   loadModel((p) => setStatus("loading", p < 1 ? `Preparing the AI on your phone… ${Math.round(p * 100)}%` : "Starting the AI…"))
     .then(() => setStatus("", "AI ready on this phone · works offline"))
-    .catch(() => {
-      setStatus("error", 'Couldn\'t load the AI. Check your internet and <button class="btn-text" id="retry-model" style="padding:0;min-height:0;text-decoration:underline">try again</button>.');
+    .catch((err) => {
+      console.error(err);
+      const code = esc(String(err?.name || "Error") + (err?.message ? ": " + err.message : "")).slice(0, 120);
+      setStatus("error", `<span>Couldn't load the AI. Check your internet, then
+        <button class="btn-text retry" id="retry-model">try again</button><span class="err-code">${code}</span></span>`);
       $("#retry-model")?.addEventListener("click", warmModel);
     });
 }
@@ -560,7 +563,8 @@ $("#btn-reset").addEventListener("click", async () => {
 
 /* ------------------------------------------------------------------ install */
 const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
-const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+const standalone = ["standalone", "fullscreen", "minimal-ui", "window-controls-overlay"].some((m) => matchMedia(`(display-mode: ${m})`).matches)
+  || navigator.standalone === true || document.referrer.startsWith("android-app://");
 window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); state.installEvent = e; if (!standalone) $("#install-chip").hidden = false; });
 window.addEventListener("appinstalled", () => { $("#install-chip").hidden = true; toast("AcneLens installed"); });
 if (isIOS && !standalone) $("#install-chip").hidden = false;
@@ -666,7 +670,14 @@ function runSplash() {
 async function boot() {
   getConfig().then((c) => { window.__cfg = c; }).catch(() => {});
   fetch("validation.json", { cache: "no-cache" }).then((r) => r.json()).then((v) => { state.validation = v; }).catch(() => {});
-  if ("serviceWorker" in navigator && location.protocol !== "file:") navigator.serviceWorker.register("sw.js").catch(() => {});
+  if ("serviceWorker" in navigator && location.protocol !== "file:") {
+    const hadController = !!navigator.serviceWorker.controller;
+    let reloaded = false;
+    // A new version was published: once its service worker takes control, reload once so the
+    // fixed files are used right away instead of on the following launch.
+    navigator.serviceWorker.addEventListener("controllerchange", () => { if (hadController && !reloaded) { reloaded = true; location.reload(); } });
+    navigator.serviceWorker.register("sw.js").then((r) => r.update()).catch(() => {});
+  }
   navigator.storage?.persist?.().catch(() => {});
   const first = store.onboarded ? "home" : "onboarding";
   show(first, { replace: true });

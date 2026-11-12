@@ -23,21 +23,29 @@ function loadScript(src) {
   });
 }
 
-async function fetchWithProgress(url, onProgress) {
+async function fetchWithProgress(url, onProgress, expectedBytes) {
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Could not download the AI model (${res.status}).`);
-  const total = Number(res.headers.get("content-length")) || 0;
-  if (!res.body || !total) return new Uint8Array(await res.arrayBuffer());
+  // Hosts such as GitHub Pages compress the file on the fly: Content-Length is then the
+  // COMPRESSED size, smaller than the bytes we receive. So never pre-size a buffer from it;
+  // collect chunks and use the model's real size (from model_config.json) for the progress bar.
+  const hinted = res.headers.get("content-encoding") ? 0 : Number(res.headers.get("content-length")) || 0;
+  const total = expectedBytes || hinted;
+  if (!res.body) return new Uint8Array(await res.arrayBuffer());
   const reader = res.body.getReader();
-  const out = new Uint8Array(total);
+  const chunks = [];
   let got = 0;
   for (;;) {
     const { done, value } = await reader.read();
     if (done) break;
-    out.set(value, got); got += value.length;
-    onProgress?.(Math.min(0.99, got / total));
+    chunks.push(value); got += value.length;
+    if (total) onProgress?.(Math.min(0.99, got / total));
   }
-  return got === total ? out : out.slice(0, got);
+  const out = new Uint8Array(got);
+  let off = 0;
+  for (const c of chunks) { out.set(c, off); off += c.length; }
+  if (expectedBytes && got !== expectedBytes) throw new Error(`The AI model download was incomplete (${got} of ${expectedBytes} bytes).`);
+  return out;
 }
 
 /** Loads the engine + model once. onProgress(0..1) reports the first download. */
@@ -52,7 +60,7 @@ export function loadModel(onProgress) {
     ort.env.wasm.wasmPaths = { mjs: ORT_DIR + "ort-wasm-simd-threaded.js", wasm: ORT_DIR + "ort-wasm-simd-threaded.wasm" };
     ort.env.wasm.numThreads = 1;          // GitHub Pages cannot enable cross-origin isolation
     ort.env.logLevel = "error";
-    const bytes = await fetchWithProgress(new URL("model/" + cfg.model_file, BASE).href, onProgress);
+    const bytes = await fetchWithProgress(new URL("model/" + cfg.model_file, BASE).href, onProgress, cfg.model_bytes);
     session = await ort.InferenceSession.create(bytes, { executionProviders: ["wasm"], graphOptimizationLevel: "all" });
     onProgress?.(1);
     return session;
