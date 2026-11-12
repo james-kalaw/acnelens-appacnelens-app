@@ -2,7 +2,7 @@ import { loadModel, getConfig, fileToImage, cropSquare, checkQuality, classify }
 import { recommend, RULE_TEXT, AAD_2024, JEADV_2024 } from "./rules.js";
 import { addEntry, allEntries, deleteEntry, clearAll, toCSV } from "./journal.js";
 
-const VERSION = "2.0.0";
+const VERSION = "2.1.0";
 const MODEL_DATE = "2026-11-12";
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -81,6 +81,7 @@ function show(name, { push = true, replace = false } = {}) {
   if (replace) history.replaceState({ screen: name }, "");
   else if (push) history.pushState({ screen: name }, "");
   if (name === "journal") renderJournal();
+  if (name === "home") startHero(); 
 }
 window.addEventListener("popstate", (e) => {
   closeSheet(true);
@@ -589,6 +590,79 @@ $("#ob-continue").addEventListener("click", () => { store.onboarded = true; show
 $("#app-version").textContent = `Version ${VERSION} · AI model ${MODEL_DATE}`;
 hydrateIcons();
 
+/* ------------------------------------------------------------------ home hero: a magnifier roaming over skin */
+// Deterministic "skin": pores everywhere, more spots on the left, clearer on the right (the logo's idea).
+function buildHeroSkin() {
+  let seed = 7;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  const feats = [];
+  for (let i = 0; i < 70; i++) feats.push(["pore", rnd() * 100, rnd() * 100, 1.1 + rnd() * 0.8]);
+  const spots = [["pap", 16, 30, 7], ["pus", 27, 58, 8], ["pap", 12, 72, 6], ["pap", 34, 22, 5.5], ["pus", 40, 80, 6.5],
+    ["bh", 22, 44, 2.4], ["bh", 30, 40, 2], ["bh", 47, 36, 2.2], ["bh", 52, 64, 1.8], ["wh", 58, 26, 3.4], ["wh", 44, 56, 3],
+    ["wh", 64, 74, 2.8], ["bh", 70, 48, 1.6], ["pap", 8, 46, 5], ["wh", 20, 88, 3]];
+  feats.push(...spots);
+  const html = feats.map(([k, x, y, w]) => `<i class="feat ${k}" style="left:${x.toFixed(1)}%;top:${y.toFixed(1)}%;width:${w}%"></i>`).join("");
+  $("#hero-skin").innerHTML = html;
+  $("#hero-skin-clone").innerHTML = html;
+}
+let heroRAF = 0, heroT0 = 0, heroL = 0;
+function heroFrame(ts) {
+  const hero = $("#lens-hero");
+  if (current !== "home" || document.hidden || !hero) { heroRAF = 0; return; }
+  const W = hero.clientWidth, H = hero.clientHeight;
+  if (W && H) {
+    const mag = $("#hero-mag"), clone = $("#hero-skin-clone");
+    const L = Math.round(Math.min(W, H) * 0.5);
+    if (L !== heroL) { heroL = L; mag.style.setProperty("--L", L + "px"); clone.style.width = W + "px"; clone.style.height = H + "px"; }
+    if (!heroT0) heroT0 = ts;
+    const t = reduceMotion ? 2 : (ts - heroT0) / 1000;
+    const x = W * (0.46 + 0.27 * Math.sin(t * 0.42)), y = H * (0.46 + 0.17 * Math.sin(t * 0.61 + 1.1));
+    const zoom = 1.9;
+    mag.style.transform = `translate(${(x - L / 2).toFixed(1)}px, ${(y - L / 2).toFixed(1)}px)`;
+    clone.style.transform = `translate(${(L / 2 - x * zoom).toFixed(1)}px, ${(L / 2 - y * zoom).toFixed(1)}px) scale(${zoom})`;
+    if (reduceMotion) { heroRAF = 0; return; }
+  }
+  heroRAF = requestAnimationFrame(heroFrame);
+}
+function startHero() { if (!heroRAF) heroRAF = requestAnimationFrame(heroFrame); }
+document.addEventListener("visibilitychange", () => { if (!document.hidden && current === "home") startHero(); });
+window.addEventListener("resize", () => { heroL = 0; });
+buildHeroSkin();
+
+/* ------------------------------------------------------------------ opening animation */
+function runSplash() {
+  const sp = $("#splash");
+  let done = false;
+  const finish = () => { sp.remove(); document.body.classList.remove("booting"); };
+  const exit = () => {
+    if (done) return;
+    done = true;
+    if (reduceMotion) { sp.style.transition = "opacity .35s"; sp.style.opacity = "0"; setTimeout(finish, 380); return; }
+    sp.classList.add("exit");
+    // The app opens out of the lens: a circular reveal centred on the magnifier's glass.
+    const m = sp.querySelector(".sp-mark").getBoundingClientRect();
+    const k = m.width / 392;                          // viewBox is 392 units wide (60..452)
+    const cx = m.left + (220 - 60) * k, cy = m.top + (220 - 60) * k, r = 112 * k;
+    const app = $("#app"), a = app.getBoundingClientRect();
+    const x = cx - a.left, y = cy - a.top;
+    const R = Math.hypot(Math.max(x, a.width - x), Math.max(y, a.height - y)) + 24;
+    app.classList.add("revealing");
+    app.style.webkitClipPath = app.style.clipPath = `circle(${r.toFixed(1)}px at ${x.toFixed(1)}px ${y.toFixed(1)}px)`;
+    app.getBoundingClientRect();
+    requestAnimationFrame(() => {
+      app.style.transition = "clip-path .85s cubic-bezier(.65,0,.35,1), -webkit-clip-path .85s cubic-bezier(.65,0,.35,1)";
+      app.style.webkitClipPath = app.style.clipPath = `circle(${R.toFixed(1)}px at ${x.toFixed(1)}px ${y.toFixed(1)}px)`;
+    });
+    setTimeout(() => {
+      finish();
+      app.classList.remove("revealing");
+      app.style.webkitClipPath = app.style.clipPath = app.style.transition = "";
+    }, 900);
+  };
+  sp.addEventListener("click", exit);
+  setTimeout(exit, reduceMotion ? 700 : 2300);
+}
+
 async function boot() {
   getConfig().then((c) => { window.__cfg = c; }).catch(() => {});
   fetch("validation.json", { cache: "no-cache" }).then((r) => r.json()).then((v) => { state.validation = v; }).catch(() => {});
@@ -597,8 +671,6 @@ async function boot() {
   const first = store.onboarded ? "home" : "onboarding";
   show(first, { replace: true });
   if (store.onboarded) warmModel();
-  await sleep(1500);
-  $("#splash").classList.add("gone");
-  setTimeout(() => $("#splash").remove(), 700);
+  runSplash();
 }
 boot();

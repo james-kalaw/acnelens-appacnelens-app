@@ -19,37 +19,47 @@
   <link rel="preload" href="assets/fonts/instrument-serif-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="assets/css/app.css">
 </head>
-<body>
+<body class="booting">
   <!-- Splash -->
   <div id="splash" aria-hidden="true">
     <div class="splash-inner">
-      <svg class="splash-mark" viewBox="0 0 512 512" role="img" aria-label="AcneLens">
-        <g fill="none" stroke="#F6EEE7" stroke-width="30" stroke-linecap="round">
-          <path class="br" d="M120 196 V160 Q120 120 160 120 H196"/>
-          <path class="br" d="M316 120 H352 Q392 120 392 160 V196"/>
-          <path class="br" d="M392 316 V352 Q392 392 352 392 H316"/>
-          <path class="br" d="M196 392 H160 Q120 392 120 352 V316"/>
-        </g>
-        <circle class="glow" cx="256" cy="256" r="74" fill="#F0C7B8"/>
-        <circle class="core" cx="256" cy="256" r="34" fill="#E2725B"/>
+      <svg class="sp-mark" viewBox="60 60 392 392" aria-hidden="true">
+        <defs><clipPath id="sp-lens"><circle cx="256" cy="256" r="150"/></clipPath>
+          <linearGradient id="sp-band" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+        <path class="sp-handle" d="M311.9 311.9 L389.4 389.4" stroke="#E2725B" stroke-width="46" stroke-linecap="round" fill="none" style="--len:109.6;--gap:200;--off:150"/>
+        <g transform="translate(220 220) scale(0.74667) translate(-256 -256)"><g clip-path="url(#sp-lens)">
+          <g class="sp-skin"><circle cx="256" cy="256" r="150" fill="#F0C7B8"/><circle class="sp-spot" style="--d:0.450s" cx="150" cy="196" r="12" fill="#E2725B"/><circle class="sp-spot" style="--d:0.495s" cx="196" cy="246" r="9" fill="#E2725B"/><circle class="sp-spot" style="--d:0.540s" cx="140" cy="286" r="15" fill="#E2725B"/><circle class="sp-spot" style="--d:0.585s" cx="198" cy="330" r="8" fill="#E2725B"/><circle class="sp-spot" style="--d:0.630s" cx="160" cy="368" r="10" fill="#E2725B"/><circle class="sp-spot" style="--d:0.675s" cx="214" cy="404" r="7" fill="#E2725B"/><circle class="sp-spot" style="--d:0.720s" cx="122" cy="240" r="7" fill="#E2725B"/><circle class="sp-spot" style="--d:0.520s" cx="318" cy="176" r="10" fill="#E2725B"/><circle class="sp-spot" style="--d:0.565s" cx="372" cy="236" r="12" fill="#E2725B"/><circle class="sp-spot" style="--d:0.610s" cx="330" cy="286" r="8" fill="#E2725B"/><circle class="sp-spot" style="--d:0.655s" cx="386" cy="330" r="9" fill="#E2725B"/><circle class="sp-spot" style="--d:0.700s" cx="312" cy="398" r="11" fill="#E2725B"/><circle class="sp-spot" style="--d:0.745s" cx="356" cy="402" r="7" fill="#E2725B"/><circle class="sp-spot" style="--d:0.790s" cx="400" cy="280" r="6" fill="#E2725B"/></g>
+          <path class="sp-clear" d="M236 0 C 300 120 196 200 262 300 C 300 360 250 430 270 512 H 520 V 0 Z" fill="#F6EEE7"/>
+          <g transform="rotate(18 256 256)"><rect class="sp-band" x="-260" y="-80" width="150" height="680" fill="url(#sp-band)"/></g>
+        </g></g>
+        <path class="sp-glint" d="M137.9 190.1 A 87.4 87.4 0 0 1 183.1 140.8" fill="none" stroke="#fff" stroke-width="7.8" stroke-linecap="round"/>
+        <path class="sp-rim" d="M220 90.0 A 130.0 130.0 0 1 1 220 350.0 A 130.0 130.0 0 1 1 220 90.0" fill="none" stroke="#F6EEE7" stroke-width="18" stroke-linecap="round" style="--len:816.8;--gap:900;--off:860"/>
       </svg>
-      <img class="splash-word" src="assets/icons/wordmark-dark.svg" alt="AcneLens">
-      <div class="splash-tag">Skin guidance, grounded in dermatology guidelines</div>
+      <div class="sp-word"><img src="assets/icons/wordmark-dark.svg" alt=""></div>
+      <div class="sp-tag">Skin guidance, grounded in dermatology guidelines</div>
     </div>
+    <div class="sp-skip">Tap to skip</div>
   </div>
 
   <main id="app">
     <!-- Onboarding -->
     <section class="screen no-tabs" id="s-onboarding" aria-labelledby="ob-title">
       <div class="ob-hero">
-        <svg viewBox="0 0 512 512" aria-hidden="true">
-          <circle class="ring" cx="256" cy="256" r="150" fill="#F0C7B8" opacity=".35"/>
-          <g fill="none" stroke="#16363B" stroke-width="26" stroke-linecap="round">
-            <path d="M120 196 V160 Q120 120 160 120 H196"/><path d="M316 120 H352 Q392 120 392 160 V196"/>
-            <path d="M392 316 V352 Q392 392 352 392 H316"/><path d="M196 392 H160 Q120 392 120 352 V316"/>
-          </g>
-          <circle cx="256" cy="256" r="34" fill="#E2725B"/>
-        </svg>
+        <div class="ob-float">
+          <svg class="ob-mark" viewBox="60 60 392 392" aria-hidden="true">
+            <defs><clipPath id="ob-lens"><circle cx="256" cy="256" r="150"/></clipPath>
+              <linearGradient id="ob-band" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".6"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+            <path d="M311.9 311.9 L389.4 389.4" stroke="#E2725B" stroke-width="46" stroke-linecap="round"/>
+            <circle cx="220" cy="220" r="130.0" fill="#FBF3EE"/>
+            <g transform="translate(220 220) scale(0.74667) translate(-256 -256)"><g clip-path="url(#ob-lens)">
+              <rect width="512" height="512" fill="#F6EEE7"/><path d="M0 0 H 236 C 300 120 196 200 262 300 C 300 360 250 430 270 512 H 0 Z" fill="#F0C7B8"/>
+              <circle cx="150" cy="196" r="12" fill="#E2725B"/><circle cx="196" cy="246" r="9" fill="#E2725B"/><circle cx="140" cy="286" r="15" fill="#E2725B"/><circle cx="198" cy="330" r="8" fill="#E2725B"/><circle cx="160" cy="368" r="10" fill="#E2725B"/><circle cx="214" cy="404" r="7" fill="#E2725B"/><circle cx="122" cy="240" r="7" fill="#E2725B"/>
+              <g transform="rotate(18 256 256)"><rect class="ob-band" x="-260" y="-80" width="150" height="680" fill="url(#ob-band)"/></g>
+            </g></g>
+            <path d="M137.9 190.1 A 87.4 87.4 0 0 1 183.1 140.8" fill="none" stroke="#fff" stroke-width="7.8" stroke-linecap="round" opacity=".75"/>
+            <circle cx="220" cy="220" r="130.0" fill="none" stroke="#16363B" stroke-width="18"/>
+          </svg>
+        </div>
       </div>
       <div class="reveal">
         <p class="eyebrow">Welcome to AcneLens</p>
@@ -77,19 +87,22 @@
         <p class="eyebrow">New skin check</p>
         <h1 id="home-title">Let's take a <em>close</em> look.</h1>
         <p class="lead">Photograph one area of your skin up close — a cheek, your forehead or your chin.</p>
-        <div class="viewfinder-hero" aria-hidden="true">
-          <div class="spot"></div><div class="spot s2"></div><div class="spot s3"></div>
-          <div class="frame"><span></span><span></span><span></span><span></span></div>
-          <div class="caption">Fill the frame with skin only</div>
+        <div class="lens-hero" id="lens-hero" aria-hidden="true">
+          <div class="skin" id="hero-skin"></div>
+          <div class="mag" id="hero-mag">
+            <div class="mag-handle"></div>
+            <div class="mag-view"><div class="skin clone" id="hero-skin-clone"></div></div>
+            <div class="mag-rim"></div>
+          </div>
+        </div>
+        <div class="stack">
+          <button class="btn btn-primary" id="btn-camera"><i data-icon="camera"></i>Take a photo</button>
+          <button class="btn btn-ghost" id="btn-gallery"><i data-icon="image"></i>Choose from gallery</button>
         </div>
         <div class="tips">
           <div class="tip"><i data-icon="scan"></i>Close-up, not a selfie</div>
           <div class="tip"><i data-icon="sun"></i>Bright, even light</div>
           <div class="tip"><i data-icon="hand"></i>Hold steady</div>
-        </div>
-        <div class="stack">
-          <button class="btn btn-primary" id="btn-camera"><i data-icon="camera"></i>Take a photo</button>
-          <button class="btn btn-ghost" id="btn-gallery"><i data-icon="image"></i>Choose from gallery</button>
         </div>
         <div class="status-line loading" id="model-status" role="status"><span class="dot"></span><span>Preparing the AI on your phone…</span></div>
         <button class="chip install-chip" id="install-chip" hidden><i data-icon="download"></i>Install AcneLens on this phone</button>
