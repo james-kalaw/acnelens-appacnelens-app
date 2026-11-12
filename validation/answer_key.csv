@@ -1,0 +1,86 @@
+ID,source,dataset_label,app_result,p_clear,p_noninf,p_inf,original_file
+AL-001,SCIN real-world phone photo,(acne - SCIN gives no 3-class label),Inflammatory,0.0629,0.0531,0.8839,SCIN/scin_14.jpg
+AL-002,SCIN real-world phone photo,(acne - SCIN gives no 3-class label),Inflammatory,0.0448,0.1849,0.7704,SCIN/scin_2.jpg
+AL-003,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.0088,0.948,0.0432,Non-Inflammatory/00072.jpg
+AL-004,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.0186,0.9506,0.0307,Non-Inflammatory/00054.jpg
+AL-005,Held-out curated test image,Clear Skin,Clear Skin,0.8322,0.0377,0.1301,Clear Skin/00006.png
+AL-006,Held-out curated test image,Clear Skin,Clear Skin,0.9116,0.0556,0.0328,Clear Skin/00004.jpg
+AL-007,Held-out curated test image,Non-Inflammatory,Inflammatory,0.0448,0.6098,0.3454,Non-Inflammatory/00068.jpeg
+AL-008,Held-out curated test image,Inflammatory,Non-Inflammatory,0.0352,0.7855,0.1794,Inflammatory/00027.jpeg
+AL-009,Held-out curated test image,Clear Skin,Clear Skin,0.6761,0.0422,0.2817,Clear Skin/00001.jpg
+AL-010,Held-out curated test image,Clear Skin,Clear Skin,0.9541,0.0183,0.0277,Clear Skin/00011.png
+AL-011,Held-out curated test image,Inflammatory,Inflammatory,0.0205,0.0159,0.9636,Inflammatory/00041.jpeg
+AL-012,Held-out curated test image,Inflammatory,Inflammatory,0.0354,0.081,0.8836,Inflammatory/00031.jpeg
+AL-013,SCIN real-world phone photo,(acne - SCIN gives no 3-class label),Inflammatory,0.0701,0.1149,0.8149,SCIN/scin_39.jpg
+AL-014,Held-out curated test image,Inflammatory,Non-Inflammatory,0.0515,0.6422,0.3064,Inflammatory/00036.jpeg
+AL-015,Held-out curated test image,Inflammatory,Inflammatory,0.0177,0.0273,0.9549,Inflammatory/00032.jpeg
+AL-016,Held-out curated test image,Clear Skin,Clear Skin,0.8967,0.0531,0.0503,Clear Skin/00013.png
+AL-017,Held-out curated test image,Clear Skin,Clear Skin,0.9612,0.0186,0.0201,Clear Skin/00012.png
+AL-018,Held-out curated test image,Inflammatory,Inflammatory,0.0161,0.1176,0.8663,Inflammatory/00025.jpeg
+AL-019,Held-out curated test image,Clear Skin,Clear Skin,0.8081,0.1353,0.0566,Clear Skin/00002.jpg
+AL-020,Held-out curated test image,Non-Inflammatory,Inflammatory,0.0379,0.5139,0.4483,Non-Inflammatory/00055.jpg
+AL-021,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.0463,0.9426,0.0111,Non-Inflammatory/00051.jpeg
+AL-022,Held-out curated test image,Clear Skin,Clear Skin,0.9778,0.0119,0.0103,Clear Skin/00009.png
+AL-023,Held-out curated test image,Clear Skin,Clear Skin,0.8047,0.0327,0.1626,Clear Skin/00024.png
+AL-024,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.0427,0.9251,0.0323,Non-Inflammatory/00062.jpeg
+AL-025,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.0524,0.9172,0.0304,Non-Inflammatory/00059.jpeg
+AL-026,Held-out curated test image,Clear Skin,Clear Skin,0.8766,0.0653,0.0581,Clear Skin/00008.png
+AL-027,Held-out curated test image,Inflammatory,Inflammatory,0.0422,0.0534,0.9044,Inflammatory/00033.jpeg
+AL-028,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.0297,0.9157,0.0546,Non-Inflammatory/00052.jpg
+AL-029,Held-out curated test image,Inflammatory,Inflammatory,0.0213,0.165,0.8137,Inflammatory/00049.jpg
+AL-030,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.0264,0.9633,0.0103,Non-Inflammatory/00057.jpg
+AL-031,Held-out curated test image,Non-Inflammatory,Inflammatory,0.113,0.4698,0.4172,Non-Inflammatory/00064.jpeg
+AL-032,Held-out curated test image,Clear Skin,Clear Skin,0.9521,0.0199,0.0279,Clear Skin/00005.png
+AL-033,Held-out curated test image,Inflammatory,Inflammatory,0.0184,0.045,0.9365,Inflammatory/00026.jpeg
+AL-034,SCIN real-world phone photo,(acne - SCIN gives no 3-class label),Inflammatory,0.4481,0.1176,0.4343,SCIN/scin_33.jpg
+AL-035,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.0411,0.8773,0.0816,Non-Inflammatory/00056.jpg
+AL-036,Held-out curated test image,Inflammatory,Inflammatory,0.0229,0.0318,0.9452,Inflammatory/00029.png
+AL-037,Held-out curated test image,Inflammatory,Inflammatory,0.04,0.0247,0.9353,Inflammatory/00034.jpeg
+AL-038,Held-out curated test image,Inflammatory,Inflammatory,0.0527,0.0446,0.9026,Inflammatory/00045.jpeg
+AL-039,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.0404,0.9163,0.0433,Non-Inflammatory/00071.jpg
+AL-040,SCIN real-world phone photo,(acne - SCIN gives no 3-class label),Inflammatory,0.0332,0.0262,0.9406,SCIN/scin_86.jpg
+AL-041,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.0384,0.9351,0.0265,Non-Inflammatory/00050.jpeg
+AL-042,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.0049,0.9875,0.0077,Non-Inflammatory/00063.jpeg
+AL-043,Held-out curated test image,Clear Skin,Clear Skin,0.9396,0.0348,0.0256,Clear Skin/00022.png
+AL-044,SCIN real-world phone photo,(acne - SCIN gives no 3-class label),Inflammatory,0.0152,0.0346,0.9502,SCIN/scin_29.jpg
+AL-045,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.1158,0.8338,0.0504,Non-Inflammatory/00058.jpeg
+AL-046,Held-out curated test image,Inflammatory,Inflammatory,0.023,0.017,0.9601,Inflammatory/00044.jpeg
+AL-047,Held-out curated test image,Inflammatory,Inflammatory,0.0665,0.2078,0.7257,Inflammatory/00046.jpeg
+AL-048,Held-out curated test image,Clear Skin,Clear Skin,0.9585,0.0176,0.0239,Clear Skin/00000.jpg
+AL-049,Held-out curated test image,Inflammatory,Inflammatory,0.0837,0.0395,0.8769,Inflammatory/00037.jpeg
+AL-050,Held-out curated test image,Clear Skin,Clear Skin,0.7993,0.0772,0.1235,Clear Skin/00017.png
+AL-051,Held-out curated test image,Inflammatory,Inflammatory,0.0919,0.0459,0.8622,Inflammatory/00042.jpeg
+AL-052,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.0339,0.8003,0.1658,Non-Inflammatory/00053.jpg
+AL-053,Held-out curated test image,Clear Skin,Clear Skin,0.9616,0.0233,0.015,Clear Skin/00014.png
+AL-054,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.29,0.6115,0.0984,Non-Inflammatory/00065.jpeg
+AL-055,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.2164,0.7267,0.0569,Non-Inflammatory/00067.png
+AL-056,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.0498,0.8851,0.0651,Non-Inflammatory/00061.png
+AL-057,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.0236,0.9644,0.012,Non-Inflammatory/00069.jpeg
+AL-058,Held-out curated test image,Inflammatory,Inflammatory,0.0243,0.0137,0.962,Inflammatory/00030.jpeg
+AL-059,Held-out curated test image,Inflammatory,Inflammatory,0.0399,0.0426,0.9175,Inflammatory/00043.jpg
+AL-060,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.0492,0.6584,0.2923,Non-Inflammatory/00070.jpeg
+AL-061,Held-out curated test image,Clear Skin,Clear Skin,0.9443,0.0223,0.0334,Clear Skin/00010.png
+AL-062,Held-out curated test image,Clear Skin,Clear Skin,0.8949,0.0622,0.0429,Clear Skin/00007.png
+AL-063,Held-out curated test image,Clear Skin,Clear Skin,0.9475,0.0204,0.0321,Clear Skin/00021.png
+AL-064,SCIN real-world phone photo,(acne - SCIN gives no 3-class label),Inflammatory,0.04,0.0363,0.9237,SCIN/scin_18.jpg
+AL-065,Held-out curated test image,Clear Skin,Clear Skin,0.9625,0.0176,0.0198,Clear Skin/00018.png
+AL-066,Held-out curated test image,Inflammatory,Inflammatory,0.0155,0.0075,0.977,Inflammatory/00039.jpeg
+AL-067,SCIN real-world phone photo,(acne - SCIN gives no 3-class label),Non-Inflammatory,0.1556,0.6442,0.2002,SCIN/scin_75.jpg
+AL-068,Held-out curated test image,Inflammatory,Inflammatory,0.0639,0.0422,0.8939,Inflammatory/00048.jpg
+AL-069,Held-out curated test image,Clear Skin,Clear Skin,0.9422,0.0256,0.0323,Clear Skin/00015.png
+AL-070,Held-out curated test image,Inflammatory,Inflammatory,0.0398,0.0361,0.9241,Inflammatory/00047.jpeg
+AL-071,Held-out curated test image,Clear Skin,Clear Skin,0.8106,0.1118,0.0777,Clear Skin/00019.png
+AL-072,Held-out curated test image,Clear Skin,Clear Skin,0.944,0.0225,0.0335,Clear Skin/00020.png
+AL-073,Held-out curated test image,Inflammatory,Inflammatory,0.0329,0.0513,0.9157,Inflammatory/00035.jpeg
+AL-074,SCIN real-world phone photo,(acne - SCIN gives no 3-class label),Inflammatory,0.0623,0.0415,0.8962,SCIN/scin_72.jpg
+AL-075,Held-out curated test image,Inflammatory,Inflammatory,0.0237,0.1689,0.8073,Inflammatory/00038.jpeg
+AL-076,Held-out curated test image,Inflammatory,Inflammatory,0.0421,0.2748,0.683,Inflammatory/00040.jpeg
+AL-077,Held-out curated test image,Clear Skin,Clear Skin,0.8897,0.0753,0.035,Clear Skin/00023.png
+AL-078,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.1698,0.7872,0.0431,Non-Inflammatory/00060.png
+AL-079,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.0274,0.9498,0.0229,Non-Inflammatory/00066.jpeg
+AL-080,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.0441,0.9154,0.0404,Non-Inflammatory/00073.jpg
+AL-081,Held-out curated test image,Non-Inflammatory,Non-Inflammatory,0.0198,0.9614,0.0188,Non-Inflammatory/00074.jpg
+AL-082,SCIN real-world phone photo,(acne - SCIN gives no 3-class label),Inflammatory,0.0486,0.1636,0.7877,SCIN/scin_26.jpg
+AL-083,Held-out curated test image,Clear Skin,Clear Skin,0.9215,0.0544,0.0241,Clear Skin/00003.jpg
+AL-084,Held-out curated test image,Clear Skin,Clear Skin,0.9554,0.0263,0.0183,Clear Skin/00016.png
+AL-085,Held-out curated test image,Inflammatory,Inflammatory,0.0344,0.0257,0.9399,Inflammatory/00028.jpeg

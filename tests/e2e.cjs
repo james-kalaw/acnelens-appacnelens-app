@@ -4,7 +4,7 @@ const { chromium, devices } = require("playwright");
 (async () => {
   const [, , url, photo, out] = process.argv;
   const browser = await chromium.launch();
-  const ctx = await browser.newContext({ ...devices["Pixel 7"] });
+  const ctx = await browser.newContext({ ...devices[process.env.DEVICE || "Pixel 7"] });
   const page = await ctx.newPage();
   const errors = [];
   page.on("console", (m) => { if (m.type() === "error") errors.push(m.text()); });

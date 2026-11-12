@@ -1,0 +1,11 @@
+test_file	scin_case_id	scin_image_path	fitzpatrick_label	crop
+scin_2.jpg	-141393122114413977	dataset/images/-2641434887280849554.png	FST5	centre square, 60% of the shorter side
+scin_14.jpg	-2931209707897506268	dataset/images/-5269458538164604429.png	FST1	centre square, 60% of the shorter side
+scin_18.jpg	-3106778686281302656	dataset/images/4357305008686989401.png	FST4	centre square, 60% of the shorter side
+scin_26.jpg	-397368205082120789	dataset/images/-7082030010200940123.png	FST2	centre square, 60% of the shorter side
+scin_29.jpg	-4863956147628945574	dataset/images/-6158102418465391225.png	FST3	centre square, 60% of the shorter side
+scin_39.jpg	-5482041191223063337	dataset/images/-7049015325438921007.png	FST2	centre square, 60% of the shorter side
+scin_72.jpg	339612674991011131	dataset/images/359598268047413532.png	FST5	centre square, 60% of the shorter side
+scin_75.jpg	4527849666026023929	dataset/images/-2655426331282625713.png	FST2	centre square, 60% of the shorter side
+scin_86.jpg	6247980772242395957	dataset/images/-8328439140807862020.png	FST2	centre square, 60% of the shorter side
+scin_33.jpg	-4985797465344756511	dataset/images/-2737293941279657085.png	FST2	centre square, 60% of the shorter side

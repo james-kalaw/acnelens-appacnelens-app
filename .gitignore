@@ -9,3 +9,4 @@ venv/
 node_modules/
 docs/_parity*
 .DS_Store
+validation/*.html

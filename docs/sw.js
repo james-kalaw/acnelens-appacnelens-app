@@ -12,7 +12,7 @@ const SHELL = [
   "assets/img/lesions/pustules.svg", "assets/img/lesions/nodules.svg", "assets/img/lesions/cysts.svg",
   "model/model_config.json", "validation.json",
 ];
-const HEAVY = ["model/acnelens.onnx", "assets/vendor/ort/ort.wasm.min.js", "assets/vendor/ort/ort-wasm-simd-threaded.mjs", "assets/vendor/ort/ort-wasm-simd-threaded.wasm"];
+const HEAVY = ["model/acnelens.onnx", "assets/vendor/ort/ort.wasm.min.js", "assets/vendor/ort/ort-wasm-simd-threaded.js", "assets/vendor/ort/ort-wasm-simd-threaded.wasm"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil((async () => {

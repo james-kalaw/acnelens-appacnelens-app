@@ -48,7 +48,8 @@ export function loadModel(onProgress) {
     const cfg = await getConfig();
     await loadScript(ORT_DIR + "ort.wasm.min.js");
     const ort = window.ort;
-    ort.env.wasm.wasmPaths = ORT_DIR;
+    // explicit file URLs: the engine's glue file is shipped as .js so every web host serves it with a JavaScript type
+    ort.env.wasm.wasmPaths = { mjs: ORT_DIR + "ort-wasm-simd-threaded.js", wasm: ORT_DIR + "ort-wasm-simd-threaded.wasm" };
     ort.env.wasm.numThreads = 1;          // GitHub Pages cannot enable cross-origin isolation
     ort.env.logLevel = "error";
     const bytes = await fetchWithProgress(new URL("model/" + cfg.model_file, BASE).href, onProgress);

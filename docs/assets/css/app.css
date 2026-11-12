@@ -336,6 +336,14 @@ details.how .body { padding: 0 16px 14px; }
 .result-hero .thumb .frame span:nth-child(1) { border-top-left-radius: 8px !important; } .result-hero .thumb .frame span:nth-child(2) { border-top-right-radius: 8px !important; }
 .result-hero .thumb .frame span:nth-child(3) { border-bottom-right-radius: 8px !important; } .result-hero .thumb .frame span:nth-child(4) { border-bottom-left-radius: 8px !important; }
 
+/* short phones (e.g. iPhone SE): keep the main button above the fold */
+@media (max-height: 720px) {
+  h1, .h1 { font-size: 34px; }
+  .lead { font-size: 16px; margin-bottom: 14px; }
+  .viewfinder-hero { aspect-ratio: 1.9; margin-bottom: 14px; }
+  .tips { margin-bottom: 14px; } .tip { padding: 9px 8px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
 }
