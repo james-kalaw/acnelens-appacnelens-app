@@ -15,7 +15,7 @@ const { chromium, devices } = require("playwright");
   await page.waitForSelector("#splash", { state: "detached", timeout: 10000 });
   await shot("02-onboarding");
   await page.click("#ob-continue");
-  await page.waitForFunction(() => document.querySelector("#model-status").textContent.includes("AI ready"), null, { timeout: 120000 });
+  await page.waitForFunction(() => (() => { const el = document.querySelector("#model-status"); return !el.classList.contains("loading") && !el.classList.contains("error"); })(), null, { timeout: 120000 });
   await shot("03-home");
   await page.setInputFiles("#file-gallery", photo);
   await page.waitForSelector("#s-frame.active");

@@ -186,6 +186,23 @@ The validation-set numbers come from the Python evaluation (`training/results/py
 5. **Question 1:** use "Nodules" (plural), consistent with the other options.
 6. **Table 1 logos:** remove the Kaggle "k" logo shown for ACNE04 and the iStock logo. iStock is no longer used.
 
+---
+
+## H. Filipino language and dark mode (app version 2.2)
+
+**Chapter 1 – Scope and Delimitations (add one sentence):**
+The application is available in English and Filipino; scientific terms (result categories, lesion types, skin types and ingredient names) are kept in English.
+
+**Chapter 2 – Development phase (add):**
+> **Translation.** The English interface text was translated into Filipino by the researchers. A fluent Filipino speaker, [name and role], reviewed every translated sentence against its English version using a side-by-side review sheet, giving priority to the dermatologist referral warnings and the disclaimer. Revisions were applied before the dermatologist validation.
+
+**Technical Plan – Phase 3 (add):**
+> **Language.** The application is available in English and Filipino. Scientific terms — the result categories (Clear Skin, Non-Inflammatory, Inflammatory), lesion types, skin types and ingredient names — remain in English to match product labels and dermatological references, while descriptions, instructions and warnings are presented in Filipino. The user chooses the language on the welcome screen or in Settings. The journal and its CSV export are always recorded in English so that entries remain comparable.
+>
+> **Appearance.** The interface follows the phone's light or dark display setting, and the user can also choose Light or Dark manually. The appearance setting does not affect the AI analysis or the recommendations.
+
+The review sheet for the reviewer is `validation/AcneLens_Filipino_Translation_Review.xlsx`.
+
 ## References to add
 
 - Karras, T., Laine, S., & Aila, T. (2019). A style-based generator architecture for generative adversarial networks. *Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)*, 4401–4410. (FFHQ dataset)

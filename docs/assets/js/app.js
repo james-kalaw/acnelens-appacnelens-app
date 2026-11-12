@@ -1,8 +1,9 @@
 import { loadModel, getConfig, fileToImage, cropSquare, checkQuality, classify } from "./analyzer.js";
-import { recommend, RULE_TEXT, AAD_2024, JEADV_2024 } from "./rules.js";
+import { recommend, AAD_2024, JEADV_2024 } from "./rules.js";
 import { addEntry, allEntries, deleteEntry, clearAll, toCSV } from "./journal.js";
+import { t, getLang, setLang, applyStatic, dateLocale, ingText } from "./i18n.js";
 
-const VERSION = "2.1.2";
+const VERSION = "2.2.0";
 const MODEL_DATE = "2026-11-12";
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -38,6 +39,8 @@ const ICONS = {
   book: P('<path d="M5 4.5h10.5A2.5 2.5 0 0 1 18 7v12.5H7.5A2.5 2.5 0 0 1 5 17z"/><path d="M5 17a2.5 2.5 0 0 1 2.5-2.5H18"/>'),
   sliders: P('<path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/>'),
   leaf: P('<path d="M5 19c0-8 5-13 14-14-1 9-6 14-14 14z"/><path d="M5 19 13 11"/>'),
+  globe: P('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9S14.6 18.4 12 21c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3z"/>'),
+  moon: P('<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>'),
   doc: P('<path d="M7 3.5h7l4 4V19a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 19V5A1.5 1.5 0 0 1 7.5 3.5z"/><path d="M14 3.5V8h4M9 13h6M9 16.5h4"/>'),
 };
 function hydrateIcons(root = document) {
@@ -61,6 +64,8 @@ const state = {
 const store = {
   get onboarded() { try { return localStorage.getItem("acnelens.onboarded") === "1"; } catch { return false; } },
   set onboarded(v) { try { localStorage.setItem("acnelens.onboarded", v ? "1" : "0"); } catch {} },
+  get theme() { try { return localStorage.getItem("acnelens.theme") || "system"; } catch { return "system"; } },
+  set theme(v) { try { v === "system" ? localStorage.removeItem("acnelens.theme") : localStorage.setItem("acnelens.theme", v); } catch {} },
 };
 
 /* ------------------------------------------------------------------ router */
@@ -115,20 +120,30 @@ function toast(msg) {
 }
 
 /* ------------------------------------------------------------------ model status */
-function setStatus(kind, text) {
+// The status line remembers WHAT it says (key + values), so it can be re-drawn in another language.
+let statusNow = { kind: "loading", key: "status.preparing", vars: {}, code: "" };
+function setStatus(kind, key, vars = {}, code = "") {
+  statusNow = { kind, key, vars, code };
+  drawStatus();
+}
+function drawStatus() {
   const el = $("#model-status");
+  const { kind, key, vars, code } = statusNow;
   el.className = `status-line ${kind}`;
-  el.innerHTML = `<span class="dot"></span><span>${text}</span>`;
+  if (kind === "error") {
+    el.innerHTML = `<span class="dot"></span><span>${t("status.error")}
+      <button class="btn-text retry" id="retry-model">${t("status.retry")}</button>.<span class="err-code">${code}</span></span>`;
+    $("#retry-model")?.addEventListener("click", warmModel);
+  } else {
+    el.innerHTML = `<span class="dot"></span><span>${t(key, vars)}</span>`;
+  }
 }
 function warmModel() {
-  loadModel((p) => setStatus("loading", p < 1 ? `Preparing the AI on your phone… ${Math.round(p * 100)}%` : "Starting the AI…"))
-    .then(() => setStatus("", "AI ready on this phone · works offline"))
+  loadModel((p) => (p < 1 ? setStatus("loading", "status.preparingPct", { p: Math.round(p * 100) }) : setStatus("loading", "status.starting")))
+    .then(() => setStatus("", "status.ready"))
     .catch((err) => {
       console.error(err);
-      const code = esc(String(err?.name || "Error") + (err?.message ? ": " + err.message : "")).slice(0, 120);
-      setStatus("error", `<span>Couldn't load the AI. Check your internet, then
-        <button class="btn-text retry" id="retry-model">try again</button><span class="err-code">${code}</span></span>`);
-      $("#retry-model")?.addEventListener("click", warmModel);
+      setStatus("error", "", {}, esc(String(err?.name || "Error") + (err?.message ? ": " + err.message : "")).slice(0, 120));
     });
 }
 
@@ -222,23 +237,19 @@ function scheduleQuality() {
   clearTimeout(qTimer);
   qTimer = setTimeout(updateQuality, 160);
 }
-const Q_TEXT = {
-  dark: ["Too dark", "Move to brighter, even light (face a window)."],
-  bright: ["Too bright / washed out", "Avoid direct flash or harsh sunlight on the skin."],
-  blur: ["Blurry", "Hold the phone steady and tap the screen to focus before taking the photo."],
-  skin: ["Not enough skin in the frame", "Zoom in so only skin fills the square — no eyes, lips, hair or background."],
-};
+const qText = (p) => [t(`qt.${p}.h`), t(`qt.${p}.p`)];
 async function updateQuality() {
   if (!state.img || !crop.V) return;
   const { sx, sy, size } = cropRect();
   const c = cropSquare(state.img, sx, sy, size, 224);
   const q = await checkQuality(c);
   state.lastQuality = q;
+  const has = (p) => q.problems.includes(p);
   const chip = (ok, label) => `<span class="chip ${ok ? "ok" : "warn"}">${ok ? icon("check") : icon("alert")}${label}</span>`;
   $("#quality").innerHTML = [
-    chip(!q.problems.includes("dark") && !q.problems.includes("bright"), q.problems.includes("dark") ? "Too dark" : q.problems.includes("bright") ? "Too bright" : "Lighting"),
-    chip(!q.problems.includes("blur"), q.problems.includes("blur") ? "Blurry" : "Focus"),
-    chip(!q.problems.includes("skin"), q.problems.includes("skin") ? "Zoom in on skin" : "Skin in frame"),
+    chip(!has("dark") && !has("bright"), has("dark") ? t("q.dark") : has("bright") ? t("q.bright") : t("q.lighting")),
+    chip(!has("blur"), has("blur") ? t("q.blurry") : t("q.focus")),
+    chip(!has("skin"), has("skin") ? t("q.skinBad") : t("q.skinOk")),
   ].join("");
   $$("#quality .chip svg").forEach((s) => { s.style.width = "15px"; s.style.height = "15px"; });
 }
@@ -253,7 +264,7 @@ async function analyze() {
   state.cropDisplay = cropSquare(state.img, sx, sy, size, 480).toDataURL("image/jpeg", 0.88);
   state.thumb = cropSquare(state.img, sx, sy, size, 160).toDataURL("image/jpeg", 0.8);
   const q = await checkQuality(state.crop224);
-  if (!q.ok) return retakeSheet(q.problems.map((p) => Q_TEXT[p]), "This photo can't be checked reliably");
+  if (!q.ok) return retakeSheet(q.problems.map(qText), t("rt.cant"));
   $("#scan-img").src = state.cropDisplay;
   const steps = $$("#scan-steps li");
   steps.forEach((li) => (li.className = ""));
@@ -268,75 +279,69 @@ async function analyze() {
     state.result = result;
     if (!result.passed) {
       history.back();
-      return retakeSheet([["The AI isn't sure about this photo", `Its best guess was only ${Math.round(result.confidence * 100)}% likely. AcneLens won't guess on an unclear photo.`],
-        Q_TEXT.skin, ["Try a different area", "Frame the area where you see the most bumps or spots."]], "Let's try another photo");
+      return retakeSheet([[t("rt.unsure.h"), t("rt.unsure.p", { pct: Math.round(result.confidence * 100) })],
+        qText("skin"), [t("rt.area.h"), t("rt.area.p")]], t("rt.another"));
     }
-    state.answers = {}; state.quizStep = 0; state.saved = false;
+    state.answers = {}; state.quizStep = 0; state.saved = false; state.rec = null;
     renderQuiz(0);
     show("quiz", { replace: true });
   } catch (err) {
     console.error(err);
     if (current === "analyzing") history.back();
-    toast("The AI couldn't run. Please check your connection and try again.");
+    toast(t("toast.aiError"));
   }
 }
 function retakeSheet(items, title) {
-  openSheet(`<h2>${esc(title)}</h2><div class="body">${items.map(([t, d]) =>
-    `<div class="point"><div class="ico">${icon("alert")}</div><div><h3>${esc(t)}</h3><p>${esc(d)}</p></div></div>`).join("")}</div>
-    <div class="stack" style="margin-top:14px"><button class="btn btn-primary" id="rt-new">${icon("camera")}Take a new photo</button>
-    <button class="btn btn-text" id="rt-adjust">Adjust the framing</button></div>`, (root) => {
+  openSheet(`<h2>${esc(title)}</h2><div class="body">${items.map(([h, d]) =>
+    `<div class="point"><div class="ico">${icon("alert")}</div><div><h3>${esc(h)}</h3><p>${esc(d)}</p></div></div>`).join("")}</div>
+    <div class="stack" style="margin-top:14px"><button class="btn btn-primary" id="rt-new">${icon("camera")}${t("rt.new")}</button>
+    <button class="btn btn-text" id="rt-adjust">${t("rt.adjust")}</button></div>`, (root) => {
     $("#rt-new", root).addEventListener("click", () => { $("#file-camera").click(); closeSheet(); });
     $("#rt-adjust", root).addEventListener("click", () => closeSheet());
   });
 }
 
 /* ------------------------------------------------------------------ quiz */
-const LESIONS = [
-  ["Blackheads", "Small dark bumps, usually on the nose or chin, that don't hurt", "Non-inflammatory"],
-  ["Whiteheads", "Small white or skin-colored bumps, closed at the surface", "Non-inflammatory"],
-  ["Papules", "Small red, raised bumps that may feel tender", "Inflammatory"],
-  ["Pustules", "Red bumps with a visible white or yellow center", "Inflammatory"],
-  ["Nodules", "Hard, solid bumps deep under the skin that are painful but do not drain fluid, unlike a cyst", "Inflammatory"],
-  ["Cysts", "Large, painful, deep bumps that are often soft and may be filled with fluid or pus", "Inflammatory"],
-];
-const QUESTIONS = [
-  { key: "lesion", title: "Which of these looks <em>closest</em> to what you see?",
-    note: "For your own reference. It doesn't change your ingredients, but some choices show extra advice.",
-    lesion: true, options: LESIONS.map(([t, d, tag]) => ({ v: t, t, d, tag, img: `assets/img/lesions/${t.toLowerCase()}.svg` })) },
-  { key: "skinType", title: "How would you describe your skin <em>most of the time</em>?", options: [
-    { v: "Oily", t: "Oily", d: "Shiny or greasy, especially by midday" },
-    { v: "Dry", t: "Dry", d: "Feels tight, flaky, or rough" },
-    { v: "Combination", t: "Combination", d: "Oily in some areas (forehead, nose, chin), dry or normal in others" },
-    { v: "Normal", t: "Normal", d: "Not too oily, not too dry" }] },
-  { key: "sensitivity", title: "How does your skin usually react to <em>new products</em>?", options: [
-    { v: "Resilient", t: "Resilient", d: "Rarely reacts, can usually handle new products fine" },
-    { v: "Highly Sensitive", t: "Highly sensitive", d: "Often gets red, itchy, or irritated when trying something new" }] },
-  { key: "activeUsage", title: "Are you using any <em>strong acne treatments</em> right now?",
-    note: "For example prescription retinoids, benzoyl peroxide, or chemical peels.", options: [
-    { v: "Yes", t: "Yes", d: "I'm already using one or more of these" },
-    { v: "No", t: "No", d: "I'm not using anything like this right now" }] },
-];
+// Option VALUES (data-v) stay in English: they feed the rules engine and the journal (Table D).
+const LESIONS = [["Blackheads", "Non-inflammatory"], ["Whiteheads", "Non-inflammatory"], ["Papules", "Inflammatory"],
+  ["Pustules", "Inflammatory"], ["Nodules", "Inflammatory"], ["Cysts", "Inflammatory"]];
+function questions() {
+  return [
+    { key: "lesion", title: t("q1.title"), note: t("q1.note"), lesion: true,
+      options: LESIONS.map(([v, tag]) => ({ v, t: v, d: t(`les.${v}`), tag, img: `assets/img/lesions/${v.toLowerCase()}.svg` })) },
+    { key: "skinType", title: t("q2.title"),
+      options: ["Oily", "Dry", "Combination", "Normal"].map((v) => ({ v, t: v, d: t(`skin.${v}`) })) },
+    { key: "sensitivity", title: t("q3.title"), options: [
+      { v: "Resilient", t: "Resilient", d: t("sens.Resilient") },
+      { v: "Highly Sensitive", t: "Highly sensitive", d: t("sens.Highly") }] },
+    { key: "activeUsage", title: t("q4.title"), note: t("q4.note"), options: [
+      { v: "Yes", t: t("act.Yes.t"), d: t("act.Yes.d") },
+      { v: "No", t: t("act.No.t"), d: t("act.No.d") }] },
+  ];
+}
+const QCOUNT = 4;
 function renderQuiz(step, dir = "fwd") {
   state.quizStep = step;
-  const q = QUESTIONS[step];
-  $("#quiz-count").textContent = `Question ${step + 1} of ${QUESTIONS.length}`;
-  $("#quiz-progress").style.width = `${((step + (state.answers[q.key] ? 1 : 0.35)) / QUESTIONS.length) * 100}%`;
+  const q = questions()[step];
+  $("#quiz-count").textContent = t("quiz.count", { n: step + 1, total: QCOUNT });
+  $("#quiz-progress").style.width = `${((step + (state.answers[q.key] ? 1 : 0.35)) / QCOUNT) * 100}%`;
   const sel = state.answers[q.key];
   const opts = q.options.map((o) => q.lesion
     ? `<button class="opt lesion" role="radio" aria-checked="${sel === o.v}" data-v="${esc(o.v)}"><img src="${o.img}" alt="" loading="lazy"><span class="tag">${o.tag}</span><span class="t">${o.t}</span><span class="d">${o.d}</span></button>`
     : `<button class="opt" role="radio" aria-checked="${sel === o.v}" data-v="${esc(o.v)}"><span class="t">${o.t}</span><span class="d">${o.d}</span></button>`).join("");
+  const notSure = () => (sel === "Not sure" || state.answers[q.key] === "Not sure" ? "✓ " : "") + t("quiz.notsure");
   $("#quiz-body").innerHTML = `<div class="qstep ${dir === "back" ? "back" : ""}">
     <h2>${q.title}</h2>${q.note ? `<p class="small muted" style="margin:0">${q.note}</p>` : ""}
     <div class="options ${q.lesion ? "grid" : ""}" role="radiogroup">${opts}</div>
-    ${q.lesion ? `<div style="text-align:center;margin-top:10px"><button class="btn btn-text ${sel === "Not sure" ? "" : ""}" data-v="Not sure" id="q-notsure">${sel === "Not sure" ? "✓ " : ""}None of these / not sure</button></div>` : ""}
-    <div class="quiz-nav"><button class="btn btn-primary" id="q-next" ${sel ? "" : "disabled"}>${step === QUESTIONS.length - 1 ? "See my results" : "Continue"} ${icon("arrow-right")}</button></div></div>`;
+    ${q.lesion ? `<div style="text-align:center;margin-top:10px"><button class="btn btn-text" data-v="Not sure" id="q-notsure">${notSure()}</button></div>` : ""}
+    <div class="quiz-nav"><button class="btn btn-primary" id="q-next" ${sel ? "" : "disabled"}>${step === QCOUNT - 1 ? t("quiz.finish") : t("quiz.next")} ${icon("arrow-right")}</button></div></div>`;
   const pick = (v) => {
     state.answers[q.key] = v;
     $$("#quiz-body .opt").forEach((b) => b.setAttribute("aria-checked", String(b.dataset.v === v)));
-    const ns = $("#q-notsure"); if (ns) ns.textContent = (v === "Not sure" ? "✓ " : "") + "None of these / not sure";
+    const ns = $("#q-notsure"); if (ns) ns.textContent = notSure();
     $("#q-next").disabled = false;
-    $("#quiz-progress").style.width = `${((step + 1) / QUESTIONS.length) * 100}%`;
-    if (!q.lesion && step < QUESTIONS.length - 1) setTimeout(() => { if (state.quizStep === step) next(); }, reduceMotion ? 0 : 380);
+    $("#quiz-progress").style.width = `${((step + 1) / QCOUNT) * 100}%`;
+    if (!q.lesion && step < QCOUNT - 1) setTimeout(() => { if (state.quizStep === step) next(); }, reduceMotion ? 0 : 380);
   };
   $$("#quiz-body .opt").forEach((b) => b.addEventListener("click", () => pick(b.dataset.v)));
   $("#q-notsure")?.addEventListener("click", () => pick("Not sure"));
@@ -344,21 +349,22 @@ function renderQuiz(step, dir = "fwd") {
 }
 function next() {
   const step = state.quizStep;
-  if (!state.answers[QUESTIONS[step].key]) return;
-  if (step < QUESTIONS.length - 1) { renderQuiz(step + 1); window.scrollTo({ top: 0 }); }
+  if (!state.answers[questions()[step].key]) return;
+  if (step < QCOUNT - 1) { renderQuiz(step + 1); window.scrollTo({ top: 0 }); }
   else { renderResults(); show("results"); }
 }
 $("#quiz-back").addEventListener("click", () => { if (state.quizStep > 0) renderQuiz(state.quizStep - 1, "back"); else history.back(); });
 
 /* ------------------------------------------------------------------ results */
+// Category names are scientific terms and stay in English in both languages.
 const CLASS_INFO = {
-  "Clear Skin": { cls: "clear", title: "Clear skin", text: "No visible acne in this area. A simple, gentle routine helps keep it that way." },
-  "Non-Inflammatory": { cls: "noninf", title: "Non-inflammatory acne", text: "Clogged pores — blackheads or whiteheads — without redness or swelling." },
-  "Inflammatory": { cls: "inf", title: "Inflammatory acne", text: "Red or swollen bumps, such as papules, pustules, nodules or cysts." },
+  "Clear Skin": { cls: "clear", title: "Clear skin" },
+  "Non-Inflammatory": { cls: "noninf", title: "Non-inflammatory acne" },
+  "Inflammatory": { cls: "inf", title: "Inflammatory acne" },
 };
-const ADVICE = {
-  "A-01": { title: "Consider seeing a dermatologist", text: "Inflammatory acne can leave dark marks or scars, especially on brown skin. If your acne is painful, spreading, or not improving with consistent care, a dermatologist can offer prescription treatment that this app cannot.", ref: "AAD 2024 guideline of care for acne vulgaris" },
-  "A-02": { title: "Cysts and nodules need a doctor", text: "Deep, painful bumps like cysts and nodules usually need prescription treatment and can scar. Please see a dermatologist — the ingredients below are only gentle supportive care.", ref: "AAD 2024: severe and nodular acne is treated with prescription options such as oral isotretinoin" },
+const ADVICE_REF = {
+  "A-01": "AAD 2024 guideline of care for acne vulgaris",
+  "A-02": "AAD 2024: severe and nodular acne is treated with prescription options such as oral isotretinoin",
 };
 function shortEvidence(e) {
   if (/strong recommendation/.test(e)) return "AAD 2024 · strong";
@@ -366,72 +372,74 @@ function shortEvidence(e) {
   if (/^International/.test(e)) return "Expert consensus 2024";
   return "General maintenance";
 }
-function stepCard(n, kind, item, extra = "") {
-  if (!item) return `<div class="card step-card none"><div class="num">${n}</div><div><div class="kind">${kind}</div>
-    <div class="name">No new active</div><p>You're already using a strong acne treatment. Adding another active can irritate your skin, so keep your current treatment and use the gentle steps here. ${extra}</p>
-    <div class="meta"><button class="evidence" data-rule="M-02">${icon("leaf")}Safety rule M-02</button></div></div></div>`;
-  return `<div class="card step-card"><div class="num">${n}</div><div><div class="kind">${kind}</div>
-    <div class="name">${esc(item.name)}</div><p>${esc(item.mechanism)}</p>
+function stepCard(n, kindKey, item) {
+  if (!item) return `<div class="card step-card none"><div class="num">${n}</div><div><div class="kind">${t(kindKey)}</div>
+    <div class="name">${t("none.name")}</div><p>${t("none.p")}</p>
+    <div class="meta"><button class="evidence" data-rule="M-02">${icon("leaf")}${t("none.rule")}</button></div></div></div>`;
+  return `<div class="card step-card"><div class="num">${n}</div><div><div class="kind">${t(kindKey)}</div>
+    <div class="name">${esc(item.name)}</div><p>${esc(ingText(item))}</p>
     <div class="meta"><span class="chip">${esc(item.vehicle)}</span><button class="evidence" data-ing="${item.id}">${icon("leaf")}${esc(shortEvidence(item.evidence))}</button></div></div></div>`;
 }
 function badgeHTML() {
   const v = state.validation;
   if (v?.status === "validated" && v.doctor_match_rate != null)
-    return `<button class="badge validated" data-sheet="validation"><span class="seal">${icon("seal")}</span><span><span class="t">Checked against a dermatologist's assessments</span><br><span class="s">Doctor Match Rate ${v.doctor_match_rate}% · See how we tested this</span></span>${icon("chev-right", "chev")}</button>`;
-  return `<button class="badge pending" data-sheet="validation"><span class="seal">${icon("clock")}</span><span><span class="t">Dermatologist review in progress</span><br><span class="s">See how we tested this</span></span>${icon("chev-right", "chev")}</button>`;
+    return `<button class="badge validated" data-sheet="validation"><span class="seal">${icon("seal")}</span><span><span class="t">${t("badge.valid.t")}</span><br><span class="s">${t("badge.valid.s", { r: v.doctor_match_rate })}</span></span>${icon("chev-right", "chev")}</button>`;
+  return `<button class="badge pending" data-sheet="validation"><span class="seal">${icon("clock")}</span><span><span class="t">${t("badge.pend.t")}</span><br><span class="s">${t("badge.pend.s")}</span></span>${icon("chev-right", "chev")}</button>`;
 }
-function renderResults() {
+function ruleText(id) { return t(`rule.${id}`); }
+function renderResults({ animate = true } = {}) {
   const r = state.result, a = state.answers;
   const info = CLASS_INFO[r.label];
   const rec = recommend({ aiClass: r.label, skinType: a.skinType, sensitivity: a.sensitivity, activeUsage: a.activeUsage, lesion: a.lesion });
   state.rec = rec;
   const pct = Math.round(r.confidence * 100);
-  const date = new Date().toLocaleDateString(undefined, { month: "long", day: "numeric", year: "numeric" });
-  const adv = rec.advisories.map((id) => `<div class="advisory" role="note"><div class="ico">${icon("doctor")}</div><div><h3>${ADVICE[id].title}</h3><p>${ADVICE[id].text}</p><div class="ref">${ADVICE[id].ref}</div></div></div>`).join("");
+  const date = new Date().toLocaleDateString(dateLocale(), { month: "long", day: "numeric", year: "numeric" });
+  const adv = rec.advisories.map((id) => `<div class="advisory" role="note"><div class="ico">${icon("doctor")}</div><div><h3>${t(`adv.${id}.h`)}</h3><p>${t(`adv.${id}.p`)}</p><div class="ref">${ADVICE_REF[id]}</div></div></div>`).join("");
   const rules = [...rec.rules, ...rec.advisories];
-  $("#results-body").innerHTML = `<div class="reveal">
-    <div class="topbar"><div><p class="eyebrow" style="margin:0">Your results</p><div class="small muted">${date}</div></div>
-      <button class="icon-btn" id="res-new" aria-label="Start a new check">${icon("refresh")}</button></div>
+  $("#results-body").innerHTML = `<div class="${animate ? "reveal" : ""}">
+    <div class="topbar"><div><p class="eyebrow" style="margin:0">${t("res.eyebrow")}</p><div class="small muted">${date}</div></div>
+      <button class="icon-btn" id="res-new" aria-label="${t("res.new")}">${icon("refresh")}</button></div>
     <div class="result-hero ${info.cls}">
-      <div class="top"><div class="thumb"><img src="${state.cropDisplay}" alt="The area you photographed"><div class="frame"><span></span><span></span><span></span><span></span></div></div>
-        <div><p class="eyebrow">AI result</p><div class="label">${info.title}</div><p>${info.text}</p></div></div>
-      <div class="meter"><div class="lbl"><span>AI confidence</span><b id="conf-num">0%</b></div><div class="bar"><span id="conf-bar"></span></div></div>
-      ${r.leanedToSafety ? `<div class="lean-note">The AI saw a real chance of inflammation (${pct}%). AcneLens leans to the safer side and treats close calls as inflammatory.</div>` : ""}
+      <div class="top"><div class="thumb"><img src="${state.cropDisplay}" alt="${t("res.photoAlt")}"><div class="frame"><span></span><span></span><span></span><span></span></div></div>
+        <div><p class="eyebrow">${t("res.ai")}</p><div class="label">${info.title}</div><p>${t(`cls.${r.label}`)}</p></div></div>
+      <div class="meter"><div class="lbl"><span>${t("res.conf")}</span><b id="conf-num">${animate ? 0 : pct}%</b></div><div class="bar"><span id="conf-bar" style="${animate ? "" : `width:${pct}%`}"></span></div></div>
+      ${r.leanedToSafety ? `<div class="lean-note">${t("res.lean", { pct })}</div>` : ""}
     </div>
     ${adv}
     <div class="chips" style="margin-top:16px">
-      <span class="chip">You reported: ${esc(a.lesion === "Not sure" ? "not sure" : a.lesion)}</span>
+      <span class="chip">${t("res.reported", { x: esc(a.lesion === "Not sure" ? t("res.notsure") : a.lesion) })}</span>
     </div>
-    <div class="section-title"><h2>Your <em>routine</em></h2></div>
-    <p class="small muted" style="margin:-4px 0 12px">Personalized for <b>${esc(a.skinType)}</b> skin · <b>${esc(a.sensitivity === "Highly Sensitive" ? "highly sensitive" : "resilient")}</b> · <b>${a.activeUsage === "Yes" ? "already using a treatment" : "no current treatment"}</b>. Ingredients, not brands — choose any product that lists them.</p>
-    ${stepCard(1, "Cleanse", rec.cleanser)}
-    ${stepCard(2, "Treat", rec.target)}
-    ${stepCard(3, "Moisturize", rec.moisturizer)}
+    <div class="section-title"><h2>${t("res.routine")}</h2></div>
+    <p class="small muted" style="margin:-4px 0 12px">${t("res.personal", { skin: esc(a.skinType), sens: t(`res.sens.${a.sensitivity}`), act: t(`res.act.${a.activeUsage}`) })}</p>
+    ${stepCard(1, "step.cleanse", rec.cleanser)}
+    ${stepCard(2, "step.treat", rec.target)}
+    ${stepCard(3, "step.moist", rec.moisturizer)}
     ${badgeHTML()}
-    <details class="how"><summary>How this was decided</summary><div class="body">
-      ${rules.map((id) => `<div class="rule"><code>${id}</code><span>${id.startsWith("R-") ? `Base rule for <b>${esc(r.label)}</b> + <b>${esc(a.skinType)}</b> skin (Table C1).` : esc(RULE_TEXT[id])}</span></div>`).join("")}
+    <details class="how"><summary>${t("res.how")}</summary><div class="body">
+      ${rules.map((id) => `<div class="rule"><code>${id}</code><span>${id.startsWith("R-") ? t("res.base", { cls: esc(r.label), skin: esc(a.skinType) }) : esc(ruleText(id))}</span></div>`).join("")}
       <div class="rule"><code>AI</code><span>Clear ${Math.round(r.probs[0] * 100)}% · Non-inflammatory ${Math.round(r.probs[1] * 100)}% · Inflammatory ${Math.round(r.probs[2] * 100)}%</span></div>
     </div></details>
     <div class="stack" style="margin-top:20px">
-      <button class="btn btn-primary" id="res-save">${icon("book")}Save to journal</button>
-      <button class="btn btn-ghost" id="res-again">${icon("camera")}Check another area</button>
+      <button class="btn ${state.saved ? "btn-ghost" : "btn-primary"}" id="res-save">${icon(state.saved ? "check" : "book")}${t(state.saved ? "res.saved" : "res.save")}</button>
+      <button class="btn btn-ghost" id="res-again">${icon("camera")}${t("res.again")}</button>
     </div>
-    <div class="disclaimer"><b>AcneLens is a guidance tool, not a medical diagnosis.</b> Patch-test new products on a small area first. If your skin becomes very irritated, stop and ask a dermatologist.</div>
+    <div class="disclaimer">${t("res.disclaimer")}</div>
   </div>`;
-  requestAnimationFrame(() => setTimeout(() => {
+  if (animate) requestAnimationFrame(() => setTimeout(() => {
     $("#conf-bar").style.width = pct + "%";
     const t0 = performance.now(), el = $("#conf-num");
-    const stepN = (t) => { const k = Math.min(1, (t - t0) / (reduceMotion ? 1 : 1100)); el.textContent = Math.round(pct * (1 - Math.pow(1 - k, 3))) + "%"; if (k < 1) requestAnimationFrame(stepN); };
+    const stepN = (ts) => { const k = Math.min(1, (ts - t0) / (reduceMotion ? 1 : 1100)); el.textContent = Math.round(pct * (1 - Math.pow(1 - k, 3))) + "%"; if (k < 1) requestAnimationFrame(stepN); };
     requestAnimationFrame(stepN);
   }, 200));
   $$("#results-body [data-ing]").forEach((b) => b.addEventListener("click", () => {
     const all = [rec.cleanser, rec.target, rec.moisturizer].filter(Boolean);
     const it = all.find((x) => x.id === b.dataset.ing);
-    openSheet(`<h2>${esc(it.name)}</h2><div class="body"><p><b>Why it's suggested:</b> ${esc(it.mechanism)}</p><p><b>Evidence:</b> ${esc(it.evidence)}</p><div class="cite">${esc(it.ref)}</div>
-      <p class="small muted" style="margin-top:12px">Ingredient ID ${it.id} · Table B of the AcneLens study.</p></div>
-      <button class="btn btn-primary" style="margin-top:8px" id="sh-close">Got it</button>`, (root) => $("#sh-close", root).addEventListener("click", () => closeSheet()));
+    openSheet(`<h2>${esc(it.name)}</h2><div class="body"><p><b>${t("ing.why")}</b> ${esc(ingText(it))}</p><p><b>${t("ing.evidence")}</b> ${esc(it.evidence)}</p>
+      <p class="small muted">${t("ing.levels")}</p><div class="cite">${esc(it.ref)}</div>
+      <p class="small muted" style="margin-top:12px">${t("ing.id", { id: it.id })}</p></div>
+      <button class="btn btn-primary" style="margin-top:8px" id="sh-close">${t("common.gotit")}</button>`, (root) => $("#sh-close", root).addEventListener("click", () => closeSheet()));
   }));
-  $$("#results-body [data-rule]").forEach((b) => b.addEventListener("click", () => openSheet(`<h2>Safety rule M-02</h2><div class="body"><p>${esc(RULE_TEXT["M-02"])}</p><p>Using several strong actives at once raises the chance of irritation; topical retinoids and benzoyl peroxide commonly cause dryness and irritation.</p><div class="cite">${esc(AAD_2024)}</div></div><button class="btn btn-primary" style="margin-top:12px" id="sh-close">Got it</button>`, (root) => $("#sh-close", root).addEventListener("click", () => closeSheet()))));
+  $$("#results-body [data-rule]").forEach((b) => b.addEventListener("click", () => openSheet(`<h2>${t("none.rule")}</h2><div class="body"><p>${esc(ruleText("M-02"))}</p><p>${t("m02.extra")}</p><div class="cite">${esc(AAD_2024)}</div></div><button class="btn btn-primary" style="margin-top:12px" id="sh-close">${t("common.gotit")}</button>`, (root) => $("#sh-close", root).addEventListener("click", () => closeSheet()))));
   $("#results-body [data-sheet='validation']").addEventListener("click", () => sheets.validation());
   $("#res-save").addEventListener("click", saveSheet);
   $("#res-again").addEventListener("click", newCheck);
@@ -440,17 +448,18 @@ function renderResults() {
 function newCheck() { show("home"); }
 
 /* ------------------------------------------------------------------ journal */
+const ROUTINE = ["Yes", "Partially", "No", "First check"];   // stored values stay in English (Table D)
 function saveSheet() {
-  if (state.saved) return toast("Already saved to your journal");
-  const ans = { routine: null, irritation: null, keepPhoto: true };
-  openSheet(`<h2>Save to your journal</h2><div class="body"><p class="small">Two quick questions help you see what's working over time.</p>
-    <div class="field-label">Since your last check, did you follow your AcneLens routine?</div>
-    <div class="seg" id="sv-routine">${["Yes", "Partially", "No", "First check"].map((v) => `<button aria-pressed="false" data-v="${v}">${v}</button>`).join("")}</div>
-    <div class="field-label">Any irritation (burning, redness, peeling)?</div>
+  if (state.saved) return toast(t("toast.already"));
+  const ans = { routine: null, irritation: null };
+  openSheet(`<h2>${t("sv.title")}</h2><div class="body"><p class="small">${t("sv.intro")}</p>
+    <div class="field-label">${t("sv.q1")}</div>
+    <div class="seg" id="sv-routine">${ROUTINE.map((v) => `<button aria-pressed="false" data-v="${v}">${t(`rf.${v}`)}</button>`).join("")}</div>
+    <div class="field-label">${t("sv.q2")}</div>
     <div class="seg five" id="sv-irr">${[1, 2, 3, 4, 5].map((v) => `<button aria-pressed="false" data-v="${v}">${v}</button>`).join("")}</div>
-    <div class="row tiny muted" style="justify-content:space-between;margin-top:6px"><span>1 · None</span><span>5 · Severe</span></div>
-    <label class="row small" style="margin-top:16px;gap:10px"><input type="checkbox" id="sv-photo" checked style="width:20px;height:20px;accent-color:#16363B"> Keep a small photo of this area on this phone</label>
-    </div><div class="stack" style="margin-top:16px"><button class="btn btn-primary" id="sv-save" disabled>${icon("check")}Save entry</button></div>`, (root) => {
+    <div class="row tiny muted" style="justify-content:space-between;margin-top:6px"><span>${t("sv.none")}</span><span>${t("sv.severe")}</span></div>
+    <label class="row small" style="margin-top:16px;gap:10px"><input type="checkbox" id="sv-photo" checked style="width:20px;height:20px;flex:none;accent-color:var(--btn)"> ${t("sv.photo")}</label>
+    </div><div class="stack" style="margin-top:16px"><button class="btn btn-primary" id="sv-save" disabled>${icon("check")}${t("sv.save")}</button></div>`, (root) => {
     const upd = () => { $("#sv-save", root).disabled = !(ans.routine && ans.irritation); };
     for (const [sel, key] of [["#sv-routine", "routine"], ["#sv-irr", "irritation"]]) {
       $$(sel + " button", root).forEach((b) => b.addEventListener("click", () => {
@@ -467,9 +476,9 @@ function saveSheet() {
           rules: [...rec.rules, ...rec.advisories], cleanser: rec.cleanser.name, target: rec.target ? rec.target.name : "None (M-02)",
           moisturizer: rec.moisturizer.name, thumb: $("#sv-photo", root).checked ? state.thumb : null,
         });
-        state.saved = true; closeSheet(); toast("Saved to your journal");
-        const b = $("#res-save"); if (b) { b.innerHTML = `${icon("check")}Saved to journal`; b.classList.replace("btn-primary", "btn-ghost"); }
-      } catch { toast("Couldn't save — storage may be full or blocked"); }
+        state.saved = true; closeSheet(); toast(t("toast.saved"));
+        const b = $("#res-save"); if (b) { b.innerHTML = `${icon("check")}${t("res.saved")}`; b.classList.replace("btn-primary", "btn-ghost"); }
+      } catch { toast(t("toast.saveFail")); }
     });
   });
 }
@@ -480,23 +489,23 @@ async function renderJournal() {
   const list = $("#journal-list");
   $("#journal-actions").hidden = !entries.length;
   if (!entries.length) {
-    list.innerHTML = `<div class="card empty">${icon("book")}<h3 style="color:var(--ink)">No entries yet</h3><p class="small">After a check, tap <b>Save to journal</b> to track how your skin changes week by week.</p></div>`;
+    list.innerHTML = `<div class="card empty">${icon("book")}<h3 style="color:var(--ink)">${t("jr.empty.h")}</h3><p class="small">${t("jr.empty.p")}</p></div>`;
     return;
   }
   list.innerHTML = `<div class="stack reveal">${entries.map((e) => `<div class="card entry">
     <div class="th">${e.thumb ? `<img src="${e.thumb}" alt="">` : icon("image")}</div>
-    <div><div class="when">${new Date(e.date).toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric", year: "numeric" })}</div>
+    <div><div class="when">${new Date(e.date).toLocaleDateString(dateLocale(), { weekday: "short", month: "short", day: "numeric", year: "numeric" })}</div>
       <div class="what"><span class="tl-dot ${CLS[e.aiResult]}"></span>${esc(e.aiResult)}</div>
-      <div class="tiny muted">${esc(e.skinType)} · routine: ${esc(e.routineFollowed)} · irritation ${e.irritation}/5</div></div>
-    <button class="del" data-id="${e.id}" aria-label="Delete this entry">${icon("trash")}</button></div>`).join("")}</div>`;
+      <div class="tiny muted">${t("jr.line", { skin: esc(e.skinType), r: esc(t(`rf.${e.routineFollowed}`)), i: e.irritation })}</div></div>
+    <button class="del" data-id="${e.id}" aria-label="${t("jr.del")}">${icon("trash")}</button></div>`).join("")}</div>`;
   $$("#journal-list .del").forEach((b) => b.addEventListener("click", async () => {
-    if (!confirm("Delete this journal entry?")) return;
+    if (!confirm(t("jr.confirm"))) return;
     await deleteEntry(Number(b.dataset.id)); renderJournal();
   }));
 }
 $("#btn-export").addEventListener("click", async () => {
   const entries = await allEntries();
-  if (!entries.length) return toast("Your journal is empty");
+  if (!entries.length) return toast(t("toast.emptyJournal"));
   const name = "AcneLens_Journey_Log.csv";
   const blob = new Blob([toCSV(entries)], { type: "text/csv" });
   const file = new File([blob], name, { type: "text/csv" });
@@ -505,59 +514,58 @@ $("#btn-export").addEventListener("click", async () => {
   }
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name;
   document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
-  toast("Journal exported");
+  toast(t("toast.exported"));
 });
 
 /* ------------------------------------------------------------------ settings sheets */
-const kappaWord = (k) => k < 0 ? "poor" : k <= 0.2 ? "slight" : k <= 0.4 ? "fair" : k <= 0.6 ? "moderate" : k <= 0.8 ? "substantial" : "almost perfect";
-const doneBtn = `<button class="btn btn-primary" style="margin-top:16px" data-close>Done</button>`;
+// Landis & Koch agreement levels are scientific terms and stay in English.
+const kappaWord = (k) => k < 0 ? "Poor" : k <= 0.2 ? "Slight" : k <= 0.4 ? "Fair" : k <= 0.6 ? "Moderate" : k <= 0.8 ? "Substantial" : "Almost perfect";
+const doneBtn = () => `<button class="btn btn-primary" style="margin-top:16px" data-close>${t("common.done")}</button>`;
 const mount = (root) => $$("[data-close]", root).forEach((b) => b.addEventListener("click", () => closeSheet()));
+const point = (ic, h, p) => `<div class="point"><div class="ico">${ic.length > 2 ? icon(ic) : ic}</div><div><h3>${h}</h3><p>${p}</p></div></div>`;
 const sheets = {
-  how: () => openSheet(`<h2>How AcneLens decides</h2><div class="body">
-    <div class="point"><div class="ico">${icon("scan")}</div><div><h3>1 · Photo check</h3><p>Before anything else, the app checks the framed area is bright enough, in focus, and mostly skin.</p></div></div>
-    <div class="point"><div class="ico">${icon("image")}</div><div><h3>2 · AI classification</h3><p>An image model (transfer learning from EfficientNetV2-B0) sorts the area into Clear Skin, Non-Inflammatory or Inflammatory. If the chance of inflammation is at least 1 in 3, AcneLens says Inflammatory — missing inflammation is the less safe mistake. If the AI's best answer is under ${Math.round((window.__cfg?.gate ?? 0.5) * 100)}% likely, it asks for a new photo instead of guessing.</p></div></div>
-    <div class="point"><div class="ico">${icon("user")}</div><div><h3>3 · Your answers</h3><p>Your skin type picks the base routine (12 rules). Highly sensitive skin switches to gentler ingredients (M-01). If you already use a strong treatment, no new active is added (M-02).</p></div></div>
-    <div class="point"><div class="ico">${icon("doctor")}</div><div><h3>4 · When to see a doctor</h3><p>Inflammatory results, or cysts and nodules you report, show a dermatologist notice. These notices never change the ingredients.</p></div></div>
-    <p class="small muted">Every ingredient is linked to the AAD 2024 acne guideline or the 2024 international expert consensus on dermocosmetics. No brands are suggested.</p></div>${doneBtn}`, mount),
+  how: () => openSheet(`<h2>${t("how.title")}</h2><div class="body">
+    ${point("scan", t("how.1.h"), t("how.1.p"))}
+    ${point("image", t("how.2.h"), t("how.2.p", { g: Math.round((window.__cfg?.gate ?? 0.5) * 100) }))}
+    ${point("user", t("how.3.h"), t("how.3.p"))}
+    ${point("doctor", t("how.4.h"), t("how.4.p"))}
+    <p class="small muted">${t("how.foot")}</p></div>${doneBtn()}`, mount),
   validation: () => {
     const v = state.validation || {};
-    const t = v.technical_test || {};
+    const tt = v.technical_test || {};
     const derm = v.status === "validated" && v.doctor_match_rate != null
-      ? `<div class="metric"><span class="k">Doctor Match Rate</span><span class="v">${v.doctor_match_rate}%</span><span class="x">How often the dermatologist's own label matched the AI (raw agreement)${v.images_reviewed ? `, across ${v.images_reviewed} photos` : ""}.</span></div>
-         <div class="metric"><span class="k">Verified Agreement Score</span><span class="v">${v.verified_agreement_score}</span><span class="x">Cohen's kappa — agreement after removing lucky guesses. ${kappaWord(Number(v.verified_agreement_score))[0].toUpperCase() + kappaWord(Number(v.verified_agreement_score)).slice(1)} agreement.</span></div>
-         <p class="small muted">${esc(v.reviewer || "Licensed dermatologist")}${v.date ? ` · ${esc(v.date)}` : ""}. The dermatologist labeled each photo without seeing the AI's answer.</p>`
-      : `<div class="advisory" style="background:var(--amber-tint);color:#5a3a06;border-color:rgba(168,106,18,.2)"><div class="ico" style="background:var(--amber)">${icon("clock")}</div><div><h3 style="color:var(--amber)">Dermatologist review in progress</h3><p>A licensed dermatologist will label a set of photos without seeing the AI's answers. The results will appear here.</p></div></div>`;
-    openSheet(`<h2>How we tested AcneLens</h2><div class="body">
+      ? `<div class="metric"><span class="k">Doctor Match Rate</span><span class="v">${v.doctor_match_rate}%</span><span class="x">${t("val.dmr.x", { across: v.images_reviewed ? t("val.across", { n: v.images_reviewed }) : "" })}</span></div>
+         <div class="metric"><span class="k">Verified Agreement Score</span><span class="v">${Number(v.verified_agreement_score).toFixed(2)}</span><span class="x">${t("val.vas.x", { word: kappaWord(Number(v.verified_agreement_score)) })}</span></div>
+         <p class="small muted">${esc(v.reviewer || t("val.reviewer"))}${v.date ? ` · ${esc(v.date)}` : ""}. ${t("val.blind")}</p>`
+      : `<div class="advisory amber"><div class="ico">${icon("clock")}</div><div><h3>${t("badge.pend.t")}</h3><p>${t("val.pend.p")}</p></div></div>`;
+    const caught = String(tt.inflammatory_caught ?? "—").replace(" of ", ` ${t("val.of")} `);
+    openSheet(`<h2>${t("val.title")}</h2><div class="body">
       ${derm}
-      <div class="list-label" style="margin-top:22px">Technical test (before review)</div>
-      <div class="metric"><span class="k">Correct on unseen photos</span><span class="v">${t.accuracy ?? "—"}%</span><span class="x">${t.images ?? "—"} curated photos the AI never saw during training.</span></div>
-      <div class="metric"><span class="k">Inflammatory acne caught</span><span class="v">${t.inflammatory_caught ?? "—"}</span><span class="x">The safety-critical number: how many inflammatory cases were not called milder.</span></div>
-      <div class="metric"><span class="k">Agreement score</span><span class="v">${t.kappa ?? "—"}</span><span class="x">Cohen's kappa against the dataset labels.</span></div>
-      <p class="small muted">Why two numbers? A plain match rate can look good by luck when one category is common. The agreement score corrects for that, so a lucky guess doesn't look like a skilled one.</p>
-      <p class="small"><b>AcneLens is a guide, not a replacement for a dermatologist.</b></p></div>${doneBtn}`, mount);
+      <div class="list-label" style="margin-top:22px">${t("val.tech")}</div>
+      <div class="metric"><span class="k">${t("val.acc.k")}</span><span class="v">${tt.accuracy ?? "—"}%</span><span class="x">${t("val.acc.x", { n: tt.images ?? "—" })}</span></div>
+      <div class="metric"><span class="k">${t("val.inf.k")}</span><span class="v">${caught}</span><span class="x">${t("val.inf.x")}</span></div>
+      <div class="metric"><span class="k">${t("val.kap.k")}</span><span class="v">${tt.kappa != null ? Number(tt.kappa).toFixed(2) : "—"}</span><span class="x">${t("val.kap.x")}</span></div>
+      <p class="small muted">${t("val.why")}</p>
+      <p class="small">${t("val.guide")}</p></div>${doneBtn()}`, mount);
   },
-  refs: () => openSheet(`<h2>Guidelines &amp; references</h2><div class="body"><p class="small">AcneLens suggests ingredients only, never brands, because any specific product may not suit your skin.</p>
-    <div class="cite">${esc(AAD_2024)}</div><div class="cite" style="margin-top:10px">${esc(JEADV_2024)}</div></div>${doneBtn}`, mount),
-  privacy: () => openSheet(`<h2>Privacy</h2><div class="body">
-    <div class="point"><div class="ico">${icon("lock")}</div><div><h3>Photos never leave your phone</h3><p>The AI runs inside the app on your device. There is no account and no server that receives photos or answers.</p></div></div>
-    <div class="point"><div class="ico">${icon("book")}</div><div><h3>Your journal is stored only here</h3><p>Entries you save stay in this phone's app storage. You can export them as a CSV file or delete them at any time.</p></div></div>
-    <div class="point"><div class="ico">${icon("trash")}</div><div><h3>Delete everything</h3><p>Use “Delete all AcneLens data” in About &amp; settings.</p></div></div></div>${doneBtn}`, mount),
+  refs: () => openSheet(`<h2>${t("refs.title")}</h2><div class="body"><p class="small">${t("refs.p")}</p>
+    <div class="cite">${esc(AAD_2024)}</div><div class="cite" style="margin-top:10px">${esc(JEADV_2024)}</div></div>${doneBtn()}`, mount),
+  privacy: () => openSheet(`<h2>${t("priv.title")}</h2><div class="body">
+    ${point("lock", t("priv.1.h"), t("priv.1.p"))}${point("book", t("priv.2.h"), t("priv.2.p"))}${point("trash", t("priv.3.h"), t("priv.3.p"))}</div>${doneBtn()}`, mount),
   install: () => openSheet(installHTML(), (root) => { mount(root); $("#do-install", root)?.addEventListener("click", promptInstall); }),
-  disclaimer: () => openSheet(`<h2>Disclaimer</h2><div class="body"><p>AcneLens is a student research project and a <b>guidance tool</b>. It does not diagnose disease, does not detect skin conditions other than acne, does not grade severity or scarring, and does not replace a licensed dermatologist.</p>
-    <p>Suggestions are general skincare ingredients drawn from published guidelines. Patch-test new products first. Stop using a product and seek medical advice if you have severe irritation, swelling, or an allergic reaction.</p>
-    <p>See a dermatologist if your acne is painful, deep, spreading, leaving scars or dark marks, or affecting how you feel.</p></div>${doneBtn}`, mount),
-  credits: () => openSheet(`<h2>Data &amp; image credits</h2><div class="body small">
-    <p><b>AI training images</b> (publicly available research datasets and curated internet images): Acne Dataset Image (Tiswan, Universitas Perjuangan Tasikmalaya; Apache-2.0) · ACNE04 (Wu et al., ICCV 2019) · Flickr-Faces-HQ (Karras et al., CVPR 2019; NVIDIA, CC BY-NC-SA 4.0), via the Kaggle mirror “FFHQ small” by tommykamaz.</p>
-    <p><b>Real-world test photos:</b> Skin Condition Image Network (SCIN), Google Research, used under the SCIN Data Use License. Used only for testing; not shown in the app.</p>
-    <p><b>Model:</b> EfficientNetV2-B0 (Tan &amp; Le, 2021) ImageNet weights via Keras Applications (Apache-2.0). Runs with ONNX Runtime Web (MIT License).</p>
-    <p><b>Fonts:</b> Instrument Serif and Manrope (SIL Open Font License).</p>
-    <p><b>Logo and lesion illustrations:</b> original artwork made for AcneLens.</p></div>${doneBtn}`, mount),
+  disclaimer: () => openSheet(`<h2>${t("disc.title")}</h2><div class="body"><p>${t("disc.1")}</p><p>${t("disc.2")}</p><p>${t("disc.3")}</p></div>${doneBtn()}`, mount),
+  credits: () => openSheet(`<h2>${t("cred.title")}</h2><div class="body small">
+    <p><b>${t("cred.train")}</b> ${t("cred.train.note")}: Acne Dataset Image (Tiswan, Universitas Perjuangan Tasikmalaya; Apache-2.0) · ACNE04 (Wu et al., ICCV 2019) · Flickr-Faces-HQ (Karras et al., CVPR 2019; NVIDIA, CC BY-NC-SA 4.0), via the Kaggle mirror “FFHQ small” by tommykamaz.</p>
+    <p><b>${t("cred.test")}</b> Skin Condition Image Network (SCIN), Google Research, SCIN Data Use License. ${t("cred.test.note")}</p>
+    <p><b>${t("cred.model")}</b> EfficientNetV2-B0 (Tan &amp; Le, 2021) ImageNet weights via Keras Applications (Apache-2.0). ONNX Runtime Web (MIT License).</p>
+    <p><b>${t("cred.fonts")}</b> Instrument Serif, Manrope (SIL Open Font License).</p>
+    <p><b>${t("cred.art")}</b> ${t("cred.art.note")}</p></div>${doneBtn()}`, mount),
 };
 $$("[data-sheet]").forEach((b) => b.addEventListener("click", () => sheets[b.dataset.sheet]()));
 $("#btn-reset").addEventListener("click", async () => {
-  if (!confirm("Delete your journal and reset AcneLens on this phone? This can't be undone.")) return;
+  if (!confirm(t("set.resetConfirm"))) return;
   try { await clearAll(); localStorage.clear(); } catch {}
-  toast("All AcneLens data deleted");
+  toast(t("toast.deleted"));
   setTimeout(() => location.reload(), 900);
 });
 
@@ -566,7 +574,7 @@ const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platfo
 const standalone = ["standalone", "fullscreen", "minimal-ui", "window-controls-overlay"].some((m) => matchMedia(`(display-mode: ${m})`).matches)
   || navigator.standalone === true || document.referrer.startsWith("android-app://");
 window.addEventListener("beforeinstallprompt", (e) => { e.preventDefault(); state.installEvent = e; if (!standalone) $("#install-chip").hidden = false; });
-window.addEventListener("appinstalled", () => { $("#install-chip").hidden = true; toast("AcneLens installed"); });
+window.addEventListener("appinstalled", () => { $("#install-chip").hidden = true; toast(t("toast.installed")); });
 if (isIOS && !standalone) $("#install-chip").hidden = false;
 $("#install-chip").addEventListener("click", () => (state.installEvent ? promptInstall() : sheets.install()));
 async function promptInstall() {
@@ -576,23 +584,49 @@ async function promptInstall() {
   state.installEvent = null; $("#install-chip").hidden = true; closeSheet();
 }
 function installHTML() {
-  if (standalone) return `<h2>You're all set</h2><div class="body"><p>AcneLens is installed and opens like a regular app — it also works offline.</p></div>${doneBtn}`;
-  if (isIOS) return `<h2>Install on iPhone</h2><div class="body">
-    <div class="point"><div class="ico">1</div><div><h3>Open in Safari</h3><p>Installing works from Safari.</p></div></div>
-    <div class="point"><div class="ico">${icon("share")}</div><div><h3>Tap Share</h3><p>The square with an arrow, at the bottom of the screen.</p></div></div>
-    <div class="point"><div class="ico">3</div><div><h3>Add to Home Screen</h3><p>Scroll down, tap <b>Add to Home Screen</b>, then <b>Add</b>.</p></div></div></div>${doneBtn}`;
-  return `<h2>Install on Android</h2><div class="body">
-    ${state.installEvent ? `<button class="btn btn-coral" id="do-install">${icon("download")}Install AcneLens</button>` : ""}
-    <div class="point"><div class="ico">1</div><div><h3>Open in Chrome</h3><p>Tap the ⋮ menu at the top right.</p></div></div>
-    <div class="point"><div class="ico">2</div><div><h3>Install app</h3><p>Tap <b>Install app</b> (or <b>Add to Home screen</b>), then <b>Install</b>.</p></div></div></div>${doneBtn}`;
+  if (standalone) return `<h2>${t("inst.done.h")}</h2><div class="body"><p>${t("inst.done.p")}</p></div>${doneBtn()}`;
+  if (isIOS) return `<h2>${t("inst.ios.h")}</h2><div class="body">
+    ${point("1", t("inst.ios.1.h"), t("inst.ios.1.p"))}${point("share", t("inst.ios.2.h"), t("inst.ios.2.p"))}${point("3", t("inst.ios.3.h"), t("inst.ios.3.p"))}</div>${doneBtn()}`;
+  return `<h2>${t("inst.and.h")}</h2><div class="body">
+    ${state.installEvent ? `<button class="btn btn-coral" id="do-install">${icon("download")}${t("inst.and.btn")}</button>` : ""}
+    ${point("1", t("inst.and.1.h"), t("inst.and.1.p"))}${point("2", t("inst.and.2.h"), t("inst.and.2.p"))}</div>${doneBtn()}`;
 }
 
+/* ------------------------------------------------------------------ language + appearance */
+function syncPressed() {
+  const l = getLang();
+  $$(".lang-toggle button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.lang === l)));
+  $$("#seg-lang button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.v === l)));
+  $$("#seg-theme button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.v === store.theme)));
+}
+/** Redraw everything that shows text, in the current language. */
+function localize() {
+  applyStatic();
+  $("#app-version").textContent = t("set.version", { v: VERSION, d: MODEL_DATE });
+  drawStatus();
+  syncPressed();
+  if (state.img && current === "frame") scheduleQuality();
+  if (state.answers && state.result && state.quizStep != null && current === "quiz") renderQuiz(state.quizStep);
+  if (state.rec) renderResults({ animate: false });
+  if (current === "journal") renderJournal();
+}
+function chooseLang(l) { if (l === getLang()) return; setLang(l); localize(); }
+$$(".lang-toggle button").forEach((b) => b.addEventListener("click", () => chooseLang(b.dataset.lang)));
+$$("#seg-lang button").forEach((b) => b.addEventListener("click", () => chooseLang(b.dataset.v)));
+function applyTheme(mode) {
+  store.theme = mode;
+  if (mode === "light" || mode === "dark") document.documentElement.setAttribute("data-theme", mode);
+  else document.documentElement.removeAttribute("data-theme");
+  syncPressed();
+}
+$$("#seg-theme button").forEach((b) => b.addEventListener("click", () => applyTheme(b.dataset.v)));
+
 /* ------------------------------------------------------------------ boot */
-$$(".tab").forEach((t) => t.addEventListener("click", () => { if (current !== t.dataset.tab) show(t.dataset.tab); }));
+$$(".tab").forEach((tb) => tb.addEventListener("click", () => { if (current !== tb.dataset.tab) show(tb.dataset.tab); }));
 $$("[data-back]").forEach((b) => b.addEventListener("click", () => history.back()));
 $("#ob-continue").addEventListener("click", () => { store.onboarded = true; show("home", { replace: true }); warmModel(); });
-$("#app-version").textContent = `Version ${VERSION} · AI model ${MODEL_DATE}`;
 hydrateIcons();
+localize();
 
 /* ------------------------------------------------------------------ home hero: a magnifier roaming over skin */
 // Deterministic "skin": pores everywhere, more spots on the left, clearer on the right (the logo's idea).

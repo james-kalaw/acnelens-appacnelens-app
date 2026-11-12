@@ -4,6 +4,7 @@
 //  - content that ends up hidden behind the bottom tab bar when scrolled to the end
 //  - the main "Take a photo" button must be visible on the home screen without scrolling
 // Usage: node tests/layout-audit.cjs http://127.0.0.1:8765/ skin-photo.jpg [SCREENSHOT_DIR]
+// Env: LANGS=en,fil  THEMES=light,dark  DEVICES="iPhone SE,Pixel 7"  (defaults: every combination, 4 devices)
 const { chromium, devices } = require("playwright");
 
 const AUDIT = () => {
@@ -41,20 +42,25 @@ const TABBAR = async (page) => page.evaluate(async () => {
   const [, , url, photo, shots] = process.argv;
   const b = await chromium.launch();
   let total = 0;
-  for (const dev of ["iPhone SE", "Pixel 7", "iPhone 14 Pro Max", "Desktop"]) {
-    const opts = dev === "Desktop" ? { viewport: { width: 1280, height: 800 } } : { ...devices[dev] };
-    const ctx = await b.newContext(opts); const page = await ctx.newPage();
+  const DEVS = (process.env.DEVICES || "iPhone SE,Pixel 7,iPhone 14 Pro Max,Desktop").split(",");
+  const combos = [];
+  for (const dev of DEVS) for (const lang of (process.env.LANGS || "en,fil").split(",")) for (const theme of (process.env.THEMES || "light,dark").split(",")) combos.push([dev, lang, theme]);
+  for (const [dev, lang, theme] of combos) {
+    const base = dev === "Desktop" ? { viewport: { width: 1280, height: 800 } } : { ...devices[dev] };
+    const ctx = await b.newContext({ ...base, colorScheme: theme }); const page = await ctx.newPage();
+    await page.addInitScript((l) => { try { localStorage.setItem("acnelens.lang", l); } catch {} }, lang);
+    const tagName = `${dev.replace(/\s/g, "")}-${lang}-${theme}`;
     const errs = []; page.on("pageerror", (e) => errs.push(e.message));
     const out = [];
     const check = async (label) => {
       await page.waitForTimeout(700);
       const iss = [...(await page.evaluate(AUDIT)), ...(await TABBAR(page))];
       out.push(...iss.map((x) => `  [${label}] ${x}`));
-      if (shots) await page.screenshot({ path: `${shots}/${dev.replace(/\s/g, "")}-${label}.png` });
+      if (shots) await page.screenshot({ path: `${shots}/${tagName}-${label}.png` });
     };
     await page.goto(url); await page.click("#splash"); await page.waitForSelector("#splash", { state: "detached" });
     await check("onboarding");
-    await page.click("#ob-continue"); await page.waitForFunction(() => document.querySelector("#model-status").textContent.includes("AI ready"), null, { timeout: 120000 });
+    await page.click("#ob-continue"); await page.waitForFunction(() => (() => { const el = document.querySelector("#model-status"); return !el.classList.contains("loading") && !el.classList.contains("error"); })(), null, { timeout: 120000 });
     await check("home");
     const fold = await page.evaluate(() => { const b = document.querySelector("#btn-camera").getBoundingClientRect(), t = document.querySelector("#tabbar").getBoundingClientRect();
       return { bottom: Math.round(b.bottom), limit: Math.round(Math.min(t.top, innerHeight) - 8) }; });
@@ -71,7 +77,7 @@ const TABBAR = async (page) => page.evaluate(async () => {
     await page.waitForTimeout(600); await page.click('.tab[data-tab="journal"]'); await check("journal");
     await page.click('.tab[data-tab="settings"]'); await check("settings");
     for (const sh of ["how", "validation", "credits", "install"]) { await page.click(`#s-settings [data-sheet="${sh}"]`); await check("sheet-" + sh); await page.keyboard.press("Escape"); await page.waitForTimeout(450); }
-    console.log(`${dev}: ${out.length} issue(s)${errs.length ? ", JS errors: " + errs.join(" | ") : ""}`); out.forEach((x) => console.log(x));
+    console.log(`${tagName}: ${out.length} issue(s)${errs.length ? ", JS errors: " + errs.join(" | ") : ""}`); out.forEach((x) => console.log(x));
     total += out.length + errs.length;
     await ctx.close();
   }

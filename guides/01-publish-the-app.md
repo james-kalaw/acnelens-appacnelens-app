@@ -2,13 +2,13 @@
 
 The app lives in the `docs/` folder of this repository. GitHub Pages turns that folder into a free website.
 
-1. Open the repository on GitHub: **james-kalaw/acnelens-appacnelens-app**.
+1. Open the repository on GitHub: **acnelens/acnelens-appacnelens-app**.
 2. Click **Settings** (top bar) → **Pages** (left menu).
 3. Under **Build and deployment → Source**, choose **Deploy from a branch**.
 4. Under **Branch**, pick **main** and the folder **/docs**, then click **Save**.
 5. Wait 1–2 minutes and refresh the page. GitHub shows the address, which will be:
 
-   **https://james-kalaw.github.io/acnelens-appacnelens-app/**
+   **https://acnelens.github.io/acnelens-appacnelens-app/**
 
 Open that link on a phone to use or install the app (see guide 2).
 

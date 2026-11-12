@@ -6,7 +6,16 @@
   <title>AcneLens</title>
   <meta name="description" content="AcneLens — on-device acne check and ingredient guidance based on dermatology guidelines. A guidance tool, not a diagnosis.">
   <meta name="theme-color" content="#16363B">
-  <meta name="color-scheme" content="light">
+  <meta name="color-scheme" content="light dark">
+  <script>
+    // Apply the saved theme and language before the first paint (no flash of the wrong theme).
+    try {
+      var th = localStorage.getItem("acnelens.theme");
+      if (th === "light" || th === "dark") document.documentElement.setAttribute("data-theme", th);
+      var lg = localStorage.getItem("acnelens.lang");
+      if (lg) document.documentElement.lang = lg === "fil" ? "fil" : "en";
+    } catch (e) {}
+  </script>
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="assets/icons/favicon-32.png" sizes="32x32" type="image/png">
@@ -36,44 +45,48 @@
         <path class="sp-rim" d="M220 90.0 A 130.0 130.0 0 1 1 220 350.0 A 130.0 130.0 0 1 1 220 90.0" fill="none" stroke="#F6EEE7" stroke-width="18" stroke-linecap="round" style="--len:816.8;--gap:900;--off:860"/>
       </svg>
       <div class="sp-word"><img src="assets/icons/wordmark-dark.svg" alt=""></div>
-      <div class="sp-tag">Skin guidance, grounded in dermatology guidelines</div>
+      <div class="sp-tag" data-i18n="sp.tag">Skin guidance, grounded in dermatology guidelines</div>
     </div>
-    <div class="sp-skip">Tap to skip</div>
+    <div class="sp-skip" data-i18n="sp.skip">Tap to skip</div>
   </div>
 
   <main id="app">
     <!-- Onboarding -->
     <section class="screen no-tabs" id="s-onboarding" aria-labelledby="ob-title">
       <div class="ob-hero">
+        <div class="lang-toggle" role="group" aria-label="Language / Wika">
+          <button type="button" data-lang="en" aria-pressed="true">English</button>
+          <button type="button" data-lang="fil" aria-pressed="false">Filipino</button>
+        </div>
         <div class="ob-float">
           <svg class="ob-mark" viewBox="60 60 392 392" aria-hidden="true">
             <defs><clipPath id="ob-lens"><circle cx="256" cy="256" r="150"/></clipPath>
               <linearGradient id="ob-band" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".6"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
             <path d="M311.9 311.9 L389.4 389.4" stroke="#E2725B" stroke-width="46" stroke-linecap="round"/>
-            <circle cx="220" cy="220" r="130.0" fill="#FBF3EE"/>
+            <circle class="obm-gap" cx="220" cy="220" r="130.0" fill="#FBF3EE"/>
             <g transform="translate(220 220) scale(0.74667) translate(-256 -256)"><g clip-path="url(#ob-lens)">
               <rect width="512" height="512" fill="#F6EEE7"/><path d="M0 0 H 236 C 300 120 196 200 262 300 C 300 360 250 430 270 512 H 0 Z" fill="#F0C7B8"/>
               <circle cx="150" cy="196" r="12" fill="#E2725B"/><circle cx="196" cy="246" r="9" fill="#E2725B"/><circle cx="140" cy="286" r="15" fill="#E2725B"/><circle cx="198" cy="330" r="8" fill="#E2725B"/><circle cx="160" cy="368" r="10" fill="#E2725B"/><circle cx="214" cy="404" r="7" fill="#E2725B"/><circle cx="122" cy="240" r="7" fill="#E2725B"/>
               <g transform="rotate(18 256 256)"><rect class="ob-band" x="-260" y="-80" width="150" height="680" fill="url(#ob-band)"/></g>
             </g></g>
             <path d="M137.9 190.1 A 87.4 87.4 0 0 1 183.1 140.8" fill="none" stroke="#fff" stroke-width="7.8" stroke-linecap="round" opacity=".75"/>
-            <circle cx="220" cy="220" r="130.0" fill="none" stroke="#16363B" stroke-width="18"/>
+            <circle class="obm-rim" cx="220" cy="220" r="130.0" fill="none" stroke="#16363B" stroke-width="18"/>
           </svg>
         </div>
       </div>
       <div class="reveal">
-        <p class="eyebrow">Welcome to AcneLens</p>
-        <h1 id="ob-title">Before you <em>start</em></h1>
+        <p class="eyebrow" data-i18n="ob.eyebrow">Welcome to AcneLens</p>
+        <h1 id="ob-title" data-i18n="ob.title">Before you <em>start</em></h1>
         <div>
-          <div class="point"><div class="ico"><i data-icon="info"></i></div><div><h3>Guidance, not a diagnosis</h3>
-            <p>AcneLens sorts what it sees into <b>Clear Skin</b>, <b>Non-Inflammatory</b> or <b>Inflammatory</b> acne, then suggests ingredients from published dermatology guidelines. Only a dermatologist can diagnose.</p></div></div>
-          <div class="point"><div class="ico"><i data-icon="lock"></i></div><div><h3>Your photo stays on this phone</h3>
-            <p>The AI runs on your device. Photos are never uploaded, and nothing is kept unless you add it to your journal.</p></div></div>
-          <div class="point"><div class="ico"><i data-icon="user"></i></div><div><h3>Know your skin first</h3>
-            <p>You'll answer 4 quick questions about your skin type, how sensitive it is, and what you already use. Honest answers keep your routine safe.</p></div></div>
+          <div class="point"><div class="ico"><i data-icon="info"></i></div><div><h3 data-i18n="ob.p1.h">Guidance, not a diagnosis</h3>
+            <p data-i18n="ob.p1.p">AcneLens sorts what it sees into <b>Clear Skin</b>, <b>Non-Inflammatory</b> or <b>Inflammatory</b> acne, then suggests ingredients from published dermatology guidelines. Only a dermatologist can diagnose.</p></div></div>
+          <div class="point"><div class="ico"><i data-icon="lock"></i></div><div><h3 data-i18n="ob.p2.h">Your photo stays on this phone</h3>
+            <p data-i18n="ob.p2.p">The AI runs on your device. Photos are never uploaded, and nothing is kept unless you add it to your journal.</p></div></div>
+          <div class="point"><div class="ico"><i data-icon="user"></i></div><div><h3 data-i18n="ob.p3.h">Know your skin first</h3>
+            <p data-i18n="ob.p3.p">You'll answer 4 quick questions about your skin type, how sensitive it is, and what you already use. Honest answers keep your routine safe.</p></div></div>
         </div>
         <div class="stack" style="margin-top:18px">
-          <button class="btn btn-primary" id="ob-continue">I understand — let's begin <i data-icon="arrow-right"></i></button>
+          <button class="btn btn-primary" id="ob-continue"><span data-i18n="ob.continue">I understand — let's begin</span><i data-icon="arrow-right"></i></button>
         </div>
       </div>
     </section>
@@ -81,12 +94,12 @@
     <!-- Home -->
     <section class="screen" id="s-home" aria-labelledby="home-title">
       <div class="topbar">
-        <div class="brandmark"><img class="mark" src="assets/icons/icon-192.png" alt=""><img class="word" src="assets/icons/wordmark-light.svg" alt="AcneLens"></div>
+        <div class="brandmark"><img class="mark" src="assets/icons/icon-192.png" alt=""><img class="word only-light" src="assets/icons/wordmark-light.svg" alt="AcneLens"><img class="word only-dark" src="assets/icons/wordmark-dark.svg" alt="AcneLens"></div>
       </div>
       <div class="reveal">
-        <p class="eyebrow">New skin check</p>
-        <h1 id="home-title">Let's take a <em>close</em> look.</h1>
-        <p class="lead">Photograph one area of your skin up close — a cheek, your forehead or your chin.</p>
+        <p class="eyebrow" data-i18n="home.eyebrow">New skin check</p>
+        <h1 id="home-title" data-i18n="home.title">Let's take a <em>close</em> look.</h1>
+        <p class="lead" data-i18n="home.lead">Photograph one area of your skin up close — a cheek, your forehead or your chin.</p>
         <div class="lens-hero" id="lens-hero" aria-hidden="true">
           <div class="skin" id="hero-skin"></div>
           <div class="mag" id="hero-mag">
@@ -96,60 +109,60 @@
           </div>
         </div>
         <div class="stack">
-          <button class="btn btn-primary" id="btn-camera"><i data-icon="camera"></i>Take a photo</button>
-          <button class="btn btn-ghost" id="btn-gallery"><i data-icon="image"></i>Choose from gallery</button>
+          <button class="btn btn-primary" id="btn-camera"><i data-icon="camera"></i><span data-i18n="home.camera">Take a photo</span></button>
+          <button class="btn btn-ghost" id="btn-gallery"><i data-icon="image"></i><span data-i18n="home.gallery">Choose from gallery</span></button>
         </div>
         <div class="tips">
-          <div class="tip"><i data-icon="scan"></i>Close-up, not a selfie</div>
-          <div class="tip"><i data-icon="sun"></i>Bright, even light</div>
-          <div class="tip"><i data-icon="hand"></i>Hold steady</div>
+          <div class="tip"><i data-icon="scan"></i><span data-i18n="home.tip1">Close-up, not a selfie</span></div>
+          <div class="tip"><i data-icon="sun"></i><span data-i18n="home.tip2">Bright, even light</span></div>
+          <div class="tip"><i data-icon="hand"></i><span data-i18n="home.tip3">Hold steady</span></div>
         </div>
-        <div class="status-line loading" id="model-status" role="status"><span class="dot"></span><span>Preparing the AI on your phone…</span></div>
-        <button class="chip install-chip" id="install-chip" hidden><i data-icon="download"></i>Install AcneLens on this phone</button>
+        <div class="status-line loading" id="model-status" role="status"><span class="dot"></span><span data-i18n="status.preparing">Preparing the AI on your phone…</span></div>
+        <button class="chip install-chip" id="install-chip" hidden><i data-icon="download"></i><span data-i18n="install.chip">Install AcneLens on this phone</span></button>
       </div>
     </section>
 
     <!-- Frame / crop -->
     <section class="screen no-tabs" id="s-frame" aria-labelledby="frame-title">
       <div class="topbar">
-        <button class="icon-btn" data-back aria-label="Back"><i data-icon="chev-left"></i></button>
-        <span class="small muted" style="font-weight:700">Step 1 of 3 · Frame</span>
+        <button class="icon-btn" data-back aria-label="Back" data-i18n-aria="common.back"><i data-icon="chev-left"></i></button>
+        <span class="small muted" style="font-weight:700" data-i18n="frame.step">Step 1 of 3 · Frame</span>
         <span style="width:40px"></span>
       </div>
-      <h2 id="frame-title">Frame one area</h2>
-      <p class="small muted" style="margin:0 0 14px">Drag and pinch so <b>only skin</b> fills the square — no eyes, lips or hair.</p>
-      <div class="cropper" id="cropper" aria-label="Photo framing area. Drag to move, pinch or use the slider to zoom.">
-        <img id="crop-img" alt="Your photo">
+      <h2 id="frame-title" data-i18n="frame.title">Frame one area</h2>
+      <p class="small muted" style="margin:0 0 14px" data-i18n="frame.help">Drag and pinch so <b>only skin</b> fills the square — no eyes, lips or hair.</p>
+      <div class="cropper" id="cropper" aria-label="Photo framing area. Drag to move, pinch or use the slider to zoom." data-i18n-aria="frame.aria">
+        <img id="crop-img" alt="Your photo" data-i18n-alt="frame.photo">
         <div class="grid"></div>
         <div class="frame"><span></span><span></span><span></span><span></span></div>
       </div>
-      <div class="zoom"><i data-icon="zoom-out"></i><input type="range" id="zoom" min="1" max="4" step="0.01" value="1" aria-label="Zoom"><i data-icon="zoom-in"></i></div>
+      <div class="zoom"><i data-icon="zoom-out"></i><input type="range" id="zoom" min="1" max="4" step="0.01" value="1" aria-label="Zoom" data-i18n-aria="frame.zoom"><i data-icon="zoom-in"></i></div>
       <div class="quality chips" id="quality" aria-live="polite"></div>
       <div class="stack">
-        <button class="btn btn-coral" id="btn-analyze"><i data-icon="scan"></i>Analyze this area</button>
-        <button class="btn btn-text" id="btn-retake"><i data-icon="refresh"></i>Use a different photo</button>
+        <button class="btn btn-coral" id="btn-analyze"><i data-icon="scan"></i><span data-i18n="frame.analyze">Analyze this area</span></button>
+        <button class="btn btn-text" id="btn-retake"><i data-icon="refresh"></i><span data-i18n="frame.retake">Use a different photo</span></button>
       </div>
     </section>
 
     <!-- Analyzing -->
     <section class="screen no-tabs" id="s-analyzing" aria-live="polite">
-      <div style="text-align:center;margin-top:8px"><p class="eyebrow">Analyzing on your phone</p><h2>Looking closely…</h2></div>
+      <div style="text-align:center;margin-top:8px"><p class="eyebrow" data-i18n="an.eyebrow">Analyzing on your phone</p><h2 data-i18n="an.title">Looking closely…</h2></div>
       <div class="scan" aria-hidden="true">
         <div class="clip"><img id="scan-img" alt=""><div class="beam"></div></div>
         <div class="pulse"></div>
         <div class="frame"><span></span><span></span><span></span><span></span></div>
       </div>
       <ul class="steps" id="scan-steps">
-        <li><span class="tick"><i data-icon="check"></i></span>Checking photo quality</li>
-        <li><span class="tick"><i data-icon="check"></i></span>Reading skin texture</li>
-        <li><span class="tick"><i data-icon="check"></i></span>Comparing with learned patterns</li>
+        <li><span class="tick"><i data-icon="check"></i></span><span data-i18n="an.s1">Checking photo quality</span></li>
+        <li><span class="tick"><i data-icon="check"></i></span><span data-i18n="an.s2">Reading skin texture</span></li>
+        <li><span class="tick"><i data-icon="check"></i></span><span data-i18n="an.s3">Comparing with learned patterns</span></li>
       </ul>
     </section>
 
     <!-- Quiz -->
     <section class="screen no-tabs" id="s-quiz">
       <div class="topbar">
-        <button class="icon-btn" id="quiz-back" aria-label="Previous question"><i data-icon="chev-left"></i></button>
+        <button class="icon-btn" id="quiz-back" aria-label="Previous question" data-i18n-aria="quiz.prev"><i data-icon="chev-left"></i></button>
         <span class="small muted" style="font-weight:700" id="quiz-count">Question 1 of 4</span>
         <span style="width:40px"></span>
       </div>
@@ -162,43 +175,52 @@
 
     <!-- Journal -->
     <section class="screen" id="s-journal">
-      <div class="topbar"><div><p class="eyebrow" style="margin:0">Progress tracker</p></div></div>
-      <h1>Your <em>journal</em></h1>
-      <p class="small muted" style="margin-top:-4px">Saved only on this phone. Export it any time as a spreadsheet file.</p>
+      <div class="topbar"><div><p class="eyebrow" style="margin:0" data-i18n="jr.eyebrow">Progress tracker</p></div></div>
+      <h1 data-i18n="jr.title">Your <em>journal</em></h1>
+      <p class="small muted" style="margin-top:-4px" data-i18n="jr.sub">Saved only on this phone. Export it any time as a spreadsheet file.</p>
       <div id="journal-list" style="margin-top:18px"></div>
       <div class="stack" style="margin-top:18px" id="journal-actions">
-        <button class="btn btn-ghost" id="btn-export"><i data-icon="download"></i>Export journal (CSV)</button>
+        <button class="btn btn-ghost" id="btn-export"><i data-icon="download"></i><span data-i18n="jr.export">Export journal (CSV)</span></button>
       </div>
     </section>
 
     <!-- Settings -->
     <section class="screen" id="s-settings">
-      <h1>About &amp; <em>settings</em></h1>
-      <div class="list-label">Understanding AcneLens</div>
-      <div class="list">
-        <button class="list-item" data-sheet="how"><span class="ico"><i data-icon="scan"></i></span>How AcneLens decides<i class="chev" data-icon="chev-right"></i></button>
-        <button class="list-item" data-sheet="validation"><span class="ico"><i data-icon="seal"></i></span>How we tested it<i class="chev" data-icon="chev-right"></i></button>
-        <button class="list-item" data-sheet="refs"><span class="ico"><i data-icon="book"></i></span>Guidelines &amp; references<i class="chev" data-icon="chev-right"></i></button>
+      <h1 data-i18n="set.title">About &amp; <em>settings</em></h1>
+      <div class="list-label" data-i18n="set.display">Display &amp; language</div>
+      <div class="list prefs">
+        <div class="pref"><div class="pref-head"><span class="ico"><i data-icon="globe"></i></span><span data-i18n="set.language">Language</span></div>
+          <div class="seg seg-pref" id="seg-lang" role="group" aria-label="Language / Wika">
+            <button type="button" data-v="en" aria-pressed="false">English</button><button type="button" data-v="fil" aria-pressed="false">Filipino</button></div></div>
+        <div class="pref"><div class="pref-head"><span class="ico"><i data-icon="moon"></i></span><span data-i18n="set.theme">Appearance</span></div>
+          <div class="seg seg-pref three" id="seg-theme" role="group">
+            <button type="button" data-v="system" aria-pressed="false" data-i18n="theme.system">Automatic</button><button type="button" data-v="light" aria-pressed="false" data-i18n="theme.light">Light</button><button type="button" data-v="dark" aria-pressed="false" data-i18n="theme.dark">Dark</button></div></div>
       </div>
-      <div class="list-label">Your data</div>
+      <div class="list-label" data-i18n="set.understand">Understanding AcneLens</div>
       <div class="list">
-        <button class="list-item" data-sheet="privacy"><span class="ico"><i data-icon="lock"></i></span>Privacy<i class="chev" data-icon="chev-right"></i></button>
-        <button class="list-item" data-sheet="install"><span class="ico"><i data-icon="download"></i></span>Install on your phone<i class="chev" data-icon="chev-right"></i></button>
-        <button class="list-item danger" id="btn-reset"><span class="ico"><i data-icon="trash"></i></span>Delete all AcneLens data</button>
+        <button class="list-item" data-sheet="how"><span class="ico"><i data-icon="scan"></i></span><span data-i18n="set.how">How AcneLens decides</span><i class="chev" data-icon="chev-right"></i></button>
+        <button class="list-item" data-sheet="validation"><span class="ico"><i data-icon="seal"></i></span><span data-i18n="set.tested">How we tested it</span><i class="chev" data-icon="chev-right"></i></button>
+        <button class="list-item" data-sheet="refs"><span class="ico"><i data-icon="book"></i></span><span data-i18n="set.refs">Guidelines &amp; references</span><i class="chev" data-icon="chev-right"></i></button>
       </div>
-      <div class="list-label">Important</div>
+      <div class="list-label" data-i18n="set.data">Your data</div>
       <div class="list">
-        <button class="list-item" data-sheet="disclaimer"><span class="ico"><i data-icon="info"></i></span>Disclaimer<i class="chev" data-icon="chev-right"></i></button>
-        <button class="list-item" data-sheet="credits"><span class="ico"><i data-icon="image"></i></span>Data &amp; image credits<i class="chev" data-icon="chev-right"></i></button>
+        <button class="list-item" data-sheet="privacy"><span class="ico"><i data-icon="lock"></i></span><span data-i18n="set.privacy">Privacy</span><i class="chev" data-icon="chev-right"></i></button>
+        <button class="list-item" data-sheet="install"><span class="ico"><i data-icon="download"></i></span><span data-i18n="set.install">Install on your phone</span><i class="chev" data-icon="chev-right"></i></button>
+        <button class="list-item danger" id="btn-reset"><span class="ico"><i data-icon="trash"></i></span><span data-i18n="set.reset">Delete all AcneLens data</span></button>
       </div>
-      <div class="ver"><img src="assets/icons/wordmark-light.svg" alt="AcneLens"><div class="tiny muted" id="app-version"></div></div>
+      <div class="list-label" data-i18n="set.important">Important</div>
+      <div class="list">
+        <button class="list-item" data-sheet="disclaimer"><span class="ico"><i data-icon="info"></i></span><span data-i18n="set.disclaimer">Disclaimer</span><i class="chev" data-icon="chev-right"></i></button>
+        <button class="list-item" data-sheet="credits"><span class="ico"><i data-icon="image"></i></span><span data-i18n="set.credits">Data &amp; image credits</span><i class="chev" data-icon="chev-right"></i></button>
+      </div>
+      <div class="ver"><img class="only-light" src="assets/icons/wordmark-light.svg" alt="AcneLens"><img class="only-dark" src="assets/icons/wordmark-dark.svg" alt="AcneLens"><div class="tiny muted" id="app-version"></div></div>
     </section>
   </main>
 
   <nav class="tabbar" id="tabbar" aria-label="Main">
-    <button class="tab" data-tab="home" aria-current="page"><i data-icon="scan"></i>Check</button>
-    <button class="tab" data-tab="journal"><i data-icon="book"></i>Journal</button>
-    <button class="tab" data-tab="settings"><i data-icon="sliders"></i>About</button>
+    <button class="tab" data-tab="home" aria-current="page"><i data-icon="scan"></i><span data-i18n="tab.home">Check</span></button>
+    <button class="tab" data-tab="journal"><i data-icon="book"></i><span data-i18n="tab.journal">Journal</span></button>
+    <button class="tab" data-tab="settings"><i data-icon="sliders"></i><span data-i18n="tab.settings">About</span></button>
   </nav>
 
   <div class="scrim" id="scrim" hidden></div>

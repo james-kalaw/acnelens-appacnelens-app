@@ -1,10 +1,10 @@
 // AcneLens service worker: makes the app installable and fully usable offline.
 // App files + AI model are cached on first visit. validation.json is always
 // fetched fresh when online so badge updates appear immediately.
-const VERSION = "acnelens-v2.1.2";
+const VERSION = "acnelens-v2.2.0";
 const SHELL = [
   "./", "index.html", "manifest.webmanifest",
-  "assets/css/app.css", "assets/js/app.js", "assets/js/analyzer.js", "assets/js/rules.js", "assets/js/journal.js",
+  "assets/css/app.css", "assets/js/app.js", "assets/js/analyzer.js", "assets/js/rules.js", "assets/js/journal.js", "assets/js/i18n.js",
   "assets/fonts/instrument-serif-latin-400-normal.woff2", "assets/fonts/instrument-serif-latin-400-italic.woff2", "assets/fonts/manrope-latin-wght-normal.woff2",
   "assets/icons/icon-192.png", "assets/icons/icon-512.png", "assets/icons/apple-touch-icon.png", "assets/icons/favicon.svg",
   "assets/icons/wordmark-dark.svg", "assets/icons/wordmark-light.svg",

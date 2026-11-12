@@ -4,8 +4,9 @@
 (the photo is never uploaded), sorts it into **Clear Skin · Non-Inflammatory · Inflammatory**, asks four questions,
 and suggests **ingredients — never brands** — using rules from the AAD 2024 acne guideline and the 2024
 international expert consensus on dermocosmetics. A guidance tool, not a diagnosis.
+Available in **English and Filipino**, in light and dark mode.
 
-**App link (after enabling GitHub Pages, guide 1):** https://james-kalaw.github.io/acnelens-appacnelens-app/
+**App link:** https://acnelens.github.io/acnelens-appacnelens-app/
 
 ## Start here
 1. [Publish the app](guides/01-publish-the-app.md) — one setting on GitHub, 2 minutes.
@@ -30,7 +31,7 @@ Dermatologist validation: pending (December consult).
 | `docs/` | The app (served by GitHub Pages). `docs/validation.json` = badge text. `docs/model/` = AI model + settings. |
 | `training/` | Re-runnable data and model pipeline (steps 01–07), manual review decisions, and all result files. |
 | `validation/` | Scoring spreadsheet, rating sheet, rules sheet, answer key, and kit builder. |
-| `tests/` | `rules.test.mjs` (all 48 quiz combinations vs. Tables C1/C2) and `e2e.cjs` (full phone walk-through). |
+| `tests/` | `rules.test.mjs` (48 quiz combinations vs. Tables C1/C2), `i18n.test.mjs` (English/Filipino text), `e2e.cjs` (phone walk-through), `layout-audit.cjs` (overlaps in both languages and themes). |
 | `brand/` | Logo files: app icon, light/dark logos (SVG + PNG) for slides and the paper cover. |
 | `guides/` | Step-by-step instructions above. |
 
